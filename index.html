@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>極上溫泉物語：豪華渡假村 - Onsen Resort Tycoon</title>
-    <!-- 引入動畫庫與圖示 -->
+    <title>極上溫泉物語：終極渡假村 - Onsen Tycoon Ultimate</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -16,12 +15,10 @@
             --panel: #ffffff;
             --text: #2c3e50;
             --wood: #8b4513;
+            --gold: #f1c40f;
         }
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Noto Sans TC', sans-serif;
@@ -35,14 +32,8 @@
             touch-action: manipulation;
         }
 
-        /* 介面佈局 */
-        #game-layout {
-            display: flex;
-            width: 100%;
-            height: 100%;
-        }
+        #game-layout { display: flex; width: 100%; height: 100%; }
 
-        /* 左側：渡假村視覺區 */
         #resort-view {
             flex-grow: 1;
             position: relative;
@@ -53,20 +44,7 @@
             align-items: center;
         }
 
-        #skyline {
-            position: absolute;
-            top: 20px;
-            font-size: 100px;
-            opacity: 0.3;
-            user-select: none;
-        }
-
-        #pool-area {
-            margin-top: auto;
-            margin-bottom: 50px;
-            position: relative;
-            z-index: 10;
-        }
+        #skyline { position: absolute; top: 20px; font-size: 100px; opacity: 0.3; user-select: none; }
 
         .main-onsen {
             font-size: clamp(100px, 20vw, 180px);
@@ -77,252 +55,58 @@
             animation: float-slow 3s ease-in-out infinite;
         }
 
-        .main-onsen:active { 
-            animation: shake 0.2s infinite;
-            transform: scale(0.95);
-        }
+        .main-onsen:active { animation: shake 0.2s infinite; transform: scale(0.95); }
 
-        @keyframes float-slow {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+        @keyframes float-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes shake { 0%, 100% { transform: translate(1px, 1px); } 20% { transform: translate(-3px, 0); } 50% { transform: translate(-1px, 2px); } }
 
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-        }
+        #decorations { position: absolute; width: 100%; height: 100%; pointer-events: none; }
+        .decor { position: absolute; font-size: 40px; animation: bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), bob 2s ease-in-out infinite; }
+        @keyframes bob { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
 
-        /* 裝飾物容器 */
-        #decorations {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
+        .steam-particle { position: absolute; color: white; opacity: 0.6; font-size: 24px; pointer-events: none; animation: steam-rise 3s linear forwards; }
+        @keyframes steam-rise { 0% { transform: translateY(0) scale(1); opacity: 0.6; } 100% { transform: translateY(-200px) scale(2); opacity: 0; } }
 
-        .decor {
-            position: absolute;
-            font-size: 40px;
-            animation: bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), bob 2s ease-in-out infinite;
-        }
+        #top-bar { position: absolute; top: 20px; left: 20px; right: 20px; display: flex; justify-content: space-between; z-index: 100; gap: 10px; flex-wrap: wrap; }
+        .stat-card { background: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; border: 2px solid var(--wood); min-height: 50px; }
+        .stat-val { font-size: 1.4rem; font-weight: bold; color: var(--primary); margin-left: 8px; }
 
-        @keyframes bounce-in {
-            0% { transform: scale(0); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes bob {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(5deg); }
-        }
-
-        /* 蒸氣動畫 */
-        .steam-particle {
-            position: absolute;
-            color: white;
-            opacity: 0.6;
-            font-size: 24px;
-            pointer-events: none;
-            animation: steam-rise 3s linear forwards;
-        }
-
-        @keyframes steam-rise {
-            0% { transform: translateY(0) scale(1); opacity: 0.6; }
-            100% { transform: translateY(-200px) scale(2); opacity: 0; }
-        }
-
-        /* 頂部數據列 */
-        #top-bar {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            justify-content: space-between;
-            z-index: 100;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .stat-card {
-            background: rgba(255,255,255,0.9);
-            padding: 10px 20px;
-            border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            border: 2px solid var(--wood);
-            min-height: 50px;
-        }
-
-        .stat-val {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin-left: 8px;
-        }
-
-        /* 右側：商店與升級面板 */
-        #side-panel {
-            width: 400px;
-            background: var(--panel);
-            border-left: 4px solid var(--wood);
-            display: flex;
-            flex-direction: column;
-            box-shadow: -10px 0 20px rgba(0,0,0,0.1);
-        }
-
-        .tabs {
-            display: flex;
-            background: var(--wood);
-        }
-
-        .tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-
+        #side-panel { width: 400px; background: var(--panel); border-left: 4px solid var(--wood); display: flex; flex-direction: column; box-shadow: -10px 0 20px rgba(0,0,0,0.1); }
+        .tabs { display: flex; background: var(--wood); }
+        .tab { flex: 1; padding: 15px; text-align: center; color: white; cursor: pointer; font-weight: bold; transition: background 0.3s; }
         .tab.active { background: var(--primary); }
 
-        .panel-content {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 20px;
-        }
+        .panel-content { flex-grow: 1; overflow-y: auto; padding: 20px; display: none; }
+        .panel-content.active { display: block; }
 
-        /* 商店物件 */
-        .shop-item {
-            background: #fff;
-            border: 2px solid #eee;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .shop-item:hover:not(.locked) {
-            border-color: var(--secondary);
-            background: #fff9f5;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-
-        .shop-item.locked {
-            opacity: 0.6;
-            filter: grayscale(1);
-            cursor: not-allowed;
-        }
-
-        .item-icon {
-            font-size: 40px;
-            margin-right: 15px;
-            width: 60px;
-            text-align: center;
-        }
-
+        .shop-item { background: #fff; border: 2px solid #eee; border-radius: 15px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; position: relative; overflow: hidden; }
+        .shop-item:hover:not(.locked) { border-color: var(--secondary); background: #fff9f5; transform: translateY(-3px); }
+        .shop-item.locked { opacity: 0.6; filter: grayscale(1); cursor: not-allowed; }
+        .item-icon { font-size: 40px; margin-right: 15px; width: 60px; text-align: center; }
         .item-details { flex-grow: 1; }
-        .item-name { font-weight: bold; font-size: 1.1rem; display: block; }
-        .item-desc { font-size: 0.85rem; color: #7f8c8d; }
+        .item-name { font-weight: bold; font-size: 1.1rem; }
+        .item-desc { font-size: 0.85rem; color: #7f8c8d; display: block; }
+        .item-stats { margin-top: 5px; font-size: 0.9rem; color: var(--accent); font-weight: bold; }
+        .item-cost-tag { background: var(--bg); padding: 5px 12px; border-radius: 20px; font-weight: bold; color: var(--primary); }
+        .item-count { position: absolute; top: 0; right: 0; background: var(--wood); color: white; padding: 2px 10px; border-bottom-left-radius: 10px; font-size: 0.8rem; }
 
-        .item-stats {
-            margin-top: 5px;
-            font-size: 0.9rem;
-            color: var(--accent);
-            font-weight: bold;
-        }
+        .click-pop { position: absolute; pointer-events: none; font-weight: bold; color: var(--primary); font-size: 24px; z-index: 1000; text-shadow: 1px 1px 2px white; }
 
-        .item-cost-tag {
-            background: var(--bg);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-            color: var(--primary);
-        }
+        #controls { position: absolute; bottom: 20px; left: 20px; display: flex; gap: 10px; }
+        .icon-btn { background: white; border: 2px solid var(--wood); border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; }
 
-        .item-count {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: var(--wood);
-            color: white;
-            padding: 2px 10px;
-            border-bottom-left-radius: 10px;
-            font-size: 0.8rem;
-        }
+        /* 隨機事件：黃金水豚 */
+        #golden-capy { position: absolute; font-size: 60px; cursor: pointer; z-index: 1000; filter: drop-shadow(0 0 10px gold); display: none; }
 
-        /* 特效 */
-        .click-pop {
-            position: absolute;
-            pointer-events: none;
-            font-weight: bold;
-            color: var(--primary);
-            font-size: 24px;
-            z-index: 1000;
-            text-shadow: 1px 1px 2px white;
-        }
+        /* 轉生面板 */
+        #prestige-btn { background: var(--gold); border: 2px solid var(--wood); padding: 5px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; display: none; margin-left: 10px; }
 
-        /* 進度條 */
-        #level-progress-container {
-            width: 100px;
-            height: 10px;
-            background: #ddd;
-            border-radius: 5px;
-            margin-top: 5px;
-            overflow: hidden;
-        }
-
-        #level-progress-bar {
-            height: 100%;
-            background: var(--accent);
-            width: 0%;
-            transition: width 0.3s;
-        }
-
-        /* 選單與控制 */
-        #controls {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .icon-btn {
-            background: white;
-            border: 2px solid var(--wood);
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        /* 響應式 */
         @media (max-width: 900px) {
             #game-layout { flex-direction: column; }
             #side-panel { width: 100%; height: 50%; border-left: none; border-top: 4px solid var(--wood); }
             #top-bar { top: 10px; left: 10px; }
             .stat-card { padding: 5px 15px; min-height: 40px; }
             .stat-val { font-size: 1rem; }
-            .main-onsen { font-size: 120px; }
         }
     </style>
 </head>
@@ -333,27 +117,17 @@
             <div id="skyline">🗻</div>
             
             <div id="top-bar">
-                <div class="stat-card">
-                    💰 <span class="stat-val" id="money">0</span>
+                <div class="stat-card">💰 <span class="stat-val" id="money">0</span></div>
+                <div class="stat-card">⭐ <span class="stat-val" id="level">1</span>
+                    <button id="prestige-btn">轉生已就緒！</button>
                 </div>
-                <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
-                    <div style="display: flex; align-items: center;">
-                        ⭐ 等級 <span class="stat-val" id="level" style="font-size: 1.2rem;">1</span>
-                    </div>
-                    <div id="level-progress-container">
-                        <div id="level-progress-bar"></div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    🕒 <span class="stat-val" id="mps" style="color: var(--accent);">0</span> <small>/s</small>
-                </div>
+                <div class="stat-card">🕒 <span class="stat-val" id="mps" style="color: var(--accent);">0</span> <small>/s</small></div>
             </div>
+
+            <div id="golden-capy" class="animate__animated">🐹</div>
 
             <div id="decorations"></div>
-
-            <div id="pool-area">
-                <div class="main-onsen" id="clicker">♨️</div>
-            </div>
+            <div id="pool-area" style="margin-top: auto; margin-bottom: 50px;"><div class="main-onsen" id="clicker">♨️</div></div>
 
             <div id="controls">
                 <div class="icon-btn" id="mute-btn">🔊</div>
@@ -367,9 +141,8 @@
                 <div class="tab" data-tab="upgrades">技術研發</div>
             </div>
             
-            <div class="panel-content" id="shop-content">
-                <!-- 商店內容由 JS 動態生成 -->
-            </div>
+            <div class="panel-content active" id="shop-content"></div>
+            <div class="panel-content" id="upgrades-content"></div>
         </div>
     </div>
 
@@ -377,216 +150,253 @@
         // 音效系統
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let muted = false;
-
-        function playSound(freq, type, duration) {
+        function playSound(freq, type, duration, vol = 0.1) {
             if (muted) return;
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = type;
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
+            osc.start(); osc.stop(audioCtx.currentTime + duration);
         }
 
         const sounds = {
             click: () => playSound(440, 'sine', 0.1),
             buy: () => playSound(880, 'square', 0.2),
-            levelUp: () => {
-                playSound(523.25, 'sine', 0.1);
-                setTimeout(() => playSound(659.25, 'sine', 0.1), 100);
-                setTimeout(() => playSound(783.99, 'sine', 0.3), 200);
-            }
+            event: () => { playSound(600, 'triangle', 0.3); setTimeout(() => playSound(900, 'triangle', 0.3), 100); },
+            levelUp: () => { [523, 659, 783].forEach((f, i) => setTimeout(() => playSound(f, 'sine', 0.2), i * 100)); }
         };
 
-        // 遊戲數據
-        const defaultGame = {
-            money: 0,
-            totalMoney: 0,
-            level: 1,
-            exp: 0,
-            mps: 0,
-            clickPower: 1,
+        // 數據模型
+        const DEFAULT_GAME = {
+            money: 0, totalMoney: 0, level: 1, mps: 0, clickPower: 1, prestigeMult: 1,
+            lastSave: Date.now(),
             items: {
-                capybara: { name: "水豚家族", icon: "🐹", baseCost: 15, mps: 1, count: 0, desc: "可愛就是正義，吸引大量遊客。" },
-                waiter: { name: "專業招待", icon: "👨‍💼", baseCost: 100, mps: 5, count: 0, desc: "提供頂級清酒與毛巾服務。" },
-                herbal: { name: "藥草浴池", icon: "🌿", baseCost: 500, mps: 18, count: 0, desc: "加入昂貴藥材，舒緩身心。" },
-                outdoor: { name: "雪景露天風呂", icon: "❄️", baseCost: 2000, mps: 70, count: 0, desc: "在飄雪中享受極致溫暖。" },
-                shrine: { name: "祈福神社", icon: "⛩️", baseCost: 8000, mps: 250, count: 0, desc: "吸引信眾前來，香火與溫泉並存。" },
-                hotel: { name: "雲海渡假村", icon: "🏰", baseCost: 50000, mps: 1200, count: 0, desc: "俯瞰整片山谷的頂級套房。" }
+                capybara: { name: "水豚家族", icon: "🐹", baseCost: 15, mps: 1, count: 0, desc: "可愛就是正義。" },
+                waiter: { name: "專業招待", icon: "👨‍💼", baseCost: 100, mps: 5, count: 0, desc: "提供頂級服務。" },
+                herbal: { name: "藥草浴池", icon: "🌿", baseCost: 500, mps: 18, count: 0, desc: "舒緩身心。" },
+                outdoor: { name: "雪景風呂", icon: "❄️", baseCost: 2000, mps: 70, count: 0, desc: "極致體驗。" },
+                hotel: { name: "雲海渡假村", icon: "🏰", baseCost: 10000, mps: 400, count: 0, desc: "頂級套房。" }
+            },
+            upgrades: {
+                strong_tap: { name: "強力噴頭", cost: 100, owned: false, desc: "點擊威力 +100%", effect: () => { game.clickPower *= 2; } },
+                auto_clean: { name: "自動洗地機", cost: 500, owned: false, desc: "所有建築產量 +20%", effect: () => { Object.values(game.items).forEach(i => i.mps *= 1.2); recalcMps(); } },
+                ads: { name: "臉書廣告", cost: 2000, owned: false, desc: "所有建築產量 +50%", effect: () => { Object.values(game.items).forEach(i => i.mps *= 1.5); recalcMps(); } }
             }
         };
 
-        let game = JSON.parse(localStorage.getItem('onsen_save')) || JSON.parse(JSON.stringify(defaultGame));
+        let game = JSON.parse(localStorage.getItem('onsen_save_v2')) || JSON.parse(JSON.stringify(DEFAULT_GAME));
+        let eventActive = false;
 
-        const moneyEl = document.getElementById('money');
-        const mpsEl = document.getElementById('mps');
-        const levelEl = document.getElementById('level');
-        const progEl = document.getElementById('level-progress-bar');
-        const shopContent = document.getElementById('shop-content');
-        const decorations = document.getElementById('decorations');
-
-        // 保存遊戲
-        function saveGame() {
-            localStorage.setItem('onsen_save', JSON.stringify(game));
+        function saveGame() { game.lastSave = Date.now(); localStorage.setItem('onsen_save_v2', JSON.stringify(game)); }
+        
+        function recalcMps() {
+            game.mps = Object.values(game.items).reduce((acc, i) => acc + (i.mps * i.count), 0) * game.prestigeMult;
         }
 
-        // 初始化商店
-        function initShop() {
-            shopContent.innerHTML = '';
+        // 初始化
+        function init() {
+            // 離線收益
+            const offlineTime = (Date.now() - game.lastSave) / 1000;
+            if (offlineTime > 60 && game.mps > 0) {
+                const earned = Math.floor(game.mps * offlineTime * 0.5);
+                game.money += earned;
+                alert(`歡迎回來！離線期間你的溫泉賺了 ${earned.toLocaleString()} 圓！`);
+            }
+
+            initTabs();
+            renderShop();
+            renderUpgrades();
+            updateUI();
+            
+            // 恢復裝飾
+            Object.values(game.items).forEach(item => {
+                for(let i=0; i<Math.min(item.count, 5); i++) spawnDecoration(item.icon);
+            });
+        }
+
+        function initTabs() {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.onclick = () => {
+                    document.querySelectorAll('.tab, .panel-content').forEach(el => el.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById(`${tab.dataset.tab}-content`).classList.add('active');
+                };
+            });
+        }
+
+        function renderShop() {
+            const container = document.getElementById('shop-content');
+            container.innerHTML = '';
             for (let id in game.items) {
                 const item = game.items[id];
+                const cost = Math.floor(item.baseCost * Math.pow(1.15, item.count));
                 const div = document.createElement('div');
-                div.className = 'shop-item';
-                div.id = `item-${id}`;
+                div.className = `shop-item ${game.money < cost ? 'locked' : ''}`;
+                div.id = `shop-${id}`;
                 div.innerHTML = `
-                    <div class="item-count" id="count-${id}">${item.count}</div>
+                    <div class="item-count">${item.count}</div>
                     <div class="item-icon">${item.icon}</div>
                     <div class="item-details">
                         <span class="item-name">${item.name}</span>
                         <span class="item-desc">${item.desc}</span>
-                        <div class="item-stats">+${item.mps} 圓/秒</div>
+                        <div class="item-stats">+${Math.floor(item.mps * game.prestigeMult)} /s</div>
                     </div>
-                    <div class="item-cost-tag" id="cost-${id}">0</div>
+                    <div class="item-cost-tag">${cost.toLocaleString()}</div>
                 `;
-                div.onclick = () => buyItem(id);
-                shopContent.appendChild(div);
-            }
-            // 恢復裝飾物
-            for (let id in game.items) {
-                for (let i = 0; i < Math.min(game.items[id].count, 10); i++) spawnDecoration(game.items[id].icon);
+                div.onclick = () => {
+                    const currentCost = Math.floor(item.baseCost * Math.pow(1.15, item.count));
+                    if (game.money >= currentCost) {
+                        game.money -= currentCost;
+                        item.count++;
+                        recalcMps();
+                        sounds.buy();
+                        if (item.count <= 10) spawnDecoration(item.icon);
+                        renderShop(); updateUI(); saveGame();
+                    }
+                };
+                container.appendChild(div);
             }
         }
 
-        function buyItem(id) {
-            const item = game.items[id];
-            const cost = Math.floor(item.baseCost * Math.pow(1.15, item.count));
-            
-            if (game.money >= cost) {
-                game.money -= cost;
-                item.count++;
-                game.mps += item.mps;
-                
-                sounds.buy();
-                if (item.count <= 10) spawnDecoration(item.icon);
-                updateUI();
-                checkLevel();
-                saveGame();
+        function renderUpgrades() {
+            const container = document.getElementById('upgrades-content');
+            container.innerHTML = '<h2>🚀 研發中心</h2>';
+            for (let id in game.upgrades) {
+                const up = game.upgrades[id];
+                if (up.owned) continue;
+                const div = document.createElement('div');
+                div.className = `shop-item ${game.money < up.cost ? 'locked' : ''}`;
+                div.innerHTML = `
+                    <div class="item-icon">💡</div>
+                    <div class="item-details">
+                        <span class="item-name">${up.name}</span>
+                        <span class="item-desc">${up.desc}</span>
+                    </div>
+                    <div class="item-cost-tag">${up.cost.toLocaleString()}</div>
+                `;
+                div.onclick = () => {
+                    if (game.money >= up.cost) {
+                        game.money -= up.cost;
+                        up.owned = true;
+                        up.effect();
+                        sounds.buy();
+                        renderUpgrades(); updateUI(); saveGame();
+                    }
+                };
+                container.appendChild(div);
             }
+        }
+
+        function updateUI() {
+            document.getElementById('money').innerText = Math.floor(game.money).toLocaleString();
+            document.getElementById('mps').innerText = Math.floor(game.mps).toLocaleString();
+            document.getElementById('level').innerText = game.level;
+            
+            // 更新按鈕鎖定狀態 (不重新渲染整個清單以保持效能)
+            document.querySelectorAll('.shop-item').forEach(el => {
+                const cost = parseInt(el.querySelector('.item-cost-tag').innerText.replace(/,/g, ''));
+                if (game.money >= cost) el.classList.remove('locked');
+                else el.classList.add('locked');
+            });
+
+            if (game.level >= 10) document.getElementById('prestige-btn').style.display = 'block';
         }
 
         function spawnDecoration(emoji) {
             const el = document.createElement('div');
-            el.className = 'decor';
-            el.innerText = emoji;
+            el.className = 'decor'; el.innerText = emoji;
             el.style.left = Math.random() * 80 + 10 + '%';
             el.style.top = Math.random() * 60 + 20 + '%';
-            el.style.animationDelay = (Math.random() * 2) + 's';
-            decorations.appendChild(el);
-            if (decorations.childNodes.length > 50) decorations.removeChild(decorations.firstChild);
+            document.getElementById('decorations').appendChild(el);
+            if (decorations.childNodes.length > 40) decorations.removeChild(decorations.firstChild);
+        }
+
+        // 點擊邏輯
+        document.getElementById('clicker').onclick = (e) => {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const val = game.clickPower * (eventActive ? 10 : 1);
+            game.money += val; game.totalMoney += val;
+            sounds.click();
+            popText(e.clientX, e.clientY, `+${val}`, eventActive ? 'gold' : '');
+            createSteam(e.clientX, e.clientY);
+            checkLevel(); updateUI();
+        };
+
+        function popText(x, y, txt, color) {
+            const p = document.createElement('div');
+            p.className = 'click-pop animate__animated animate__fadeOutUp';
+            p.innerText = txt; p.style.left = x + 'px'; p.style.top = y + 'px';
+            if (color) p.style.color = color;
+            document.body.appendChild(p); setTimeout(() => p.remove(), 800);
+        }
+
+        function createSteam(x, y) {
+            for(let i=0; i<3; i++) {
+                const s = document.createElement('div');
+                s.className = 'steam-particle'; s.innerText = '☁️';
+                s.style.left = (x - 20 + Math.random() * 40) + 'px'; s.style.top = y + 'px';
+                document.body.appendChild(s); setTimeout(() => s.remove(), 3000);
+            }
         }
 
         function checkLevel() {
-            const nextLevelExp = Math.pow(game.level, 2) * 200;
-            if (game.totalMoney >= nextLevelExp) {
+            const next = Math.pow(game.level, 2) * 500;
+            if (game.totalMoney >= next) {
                 game.level++;
-                game.clickPower = 1 + Math.floor(game.level * 1.5);
                 sounds.levelUp();
-                alert(`恭喜！渡假村升級到等級 ${game.level}！\n點擊威力提升！`);
-                saveGame();
-            }
-            const currentLevelBase = Math.pow(game.level - 1, 2) * 200;
-            const progress = ((game.totalMoney - currentLevelBase) / (nextLevelExp - currentLevelBase)) * 100;
-            progEl.style.width = Math.min(progress, 100) + '%';
-        }
-
-        function updateUI() {
-            moneyEl.innerText = Math.floor(game.money).toLocaleString();
-            mpsEl.innerText = game.mps.toLocaleString();
-            levelEl.innerText = game.level;
-
-            for (let id in game.items) {
-                const item = game.items[id];
-                const cost = Math.floor(item.baseCost * Math.pow(1.15, item.count));
-                const itemEl = document.getElementById(`item-${id}`);
-                const costEl = document.getElementById(`cost-${id}`);
-                const countEl = document.getElementById(`count-${id}`);
-                
-                if (costEl) costEl.innerText = cost.toLocaleString();
-                if (countEl) countEl.innerText = item.count;
-                
-                if (itemEl) {
-                    if (game.money >= cost) itemEl.classList.remove('locked');
-                    else itemEl.classList.add('locked');
-                }
+                renderShop(); renderUpgrades(); updateUI();
             }
         }
 
-        // 點擊事件
-        document.getElementById('clicker').addEventListener('click', (e) => {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            game.money += game.clickPower;
-            game.totalMoney += game.clickPower;
+        // 隨機事件：黃金水豚
+        function triggerEvent() {
+            const capy = document.getElementById('golden-capy');
+            capy.style.left = Math.random() * 80 + 10 + '%';
+            capy.style.top = Math.random() * 70 + 10 + '%';
+            capy.style.display = 'block';
+            capy.classList.add('animate__bounceIn');
             
-            sounds.click();
-            
-            const pop = document.createElement('div');
-            pop.className = 'click-pop animate__animated animate__fadeOutUp';
-            pop.innerText = `+${game.clickPower}`;
-            pop.style.left = e.clientX + 'px';
-            pop.style.top = e.clientY + 'px';
-            document.body.appendChild(pop);
-            setTimeout(() => pop.remove(), 800);
+            capy.onclick = () => {
+                eventActive = true;
+                capy.style.display = 'none';
+                sounds.event();
+                document.body.style.boxShadow = "inset 0 0 100px gold";
+                setTimeout(() => {
+                    eventActive = false;
+                    document.body.style.boxShadow = "none";
+                }, 15000);
+            };
 
-            createSteam(e.clientX, e.clientY);
-            updateUI();
-            checkLevel();
-        });
-
-        function createSteam(x, y) {
-            for (let i = 0; i < 3; i++) {
-                const s = document.createElement('div');
-                s.className = 'steam-particle';
-                s.innerText = '☁️';
-                s.style.left = (x - 20 + Math.random() * 40) + 'px';
-                s.style.top = y + 'px';
-                s.style.animationDelay = (Math.random() * 0.5) + 's';
-                document.body.appendChild(s);
-                setTimeout(() => s.remove(), 3000);
-            }
+            setTimeout(() => { capy.style.display = 'none'; }, 8000);
         }
 
-        // 控制功能
-        document.getElementById('mute-btn').onclick = function() {
-            muted = !muted;
-            this.innerText = muted ? '🔇' : '🔊';
-        };
+        setInterval(() => { if (Math.random() < 0.1) triggerEvent(); }, 30000);
 
-        document.getElementById('reset-btn').onclick = function() {
-            if (confirm('確定要拆除整個渡假村重新開始嗎？')) {
-                game = JSON.parse(JSON.stringify(defaultGame));
-                saveGame();
-                location.reload();
+        // 轉生
+        document.getElementById('prestige-btn').onclick = () => {
+            if (confirm(`轉生將會重置所有建築，但你會獲得 ${game.level * 10}% 的永久收益加成。確定嗎？`)) {
+                const newMult = game.prestigeMult + (game.level * 0.1);
+                game = JSON.parse(JSON.stringify(DEFAULT_GAME));
+                game.prestigeMult = newMult;
+                saveGame(); location.reload();
             }
         };
 
-        // 自動保存
-        setInterval(saveGame, 10000);
+        document.getElementById('reset-btn').onclick = () => { if(confirm('重置所有進度？')) { localStorage.removeItem('onsen_save_v2'); location.reload(); } };
+        document.getElementById('mute-btn').onclick = function() { muted = !muted; this.innerText = muted ? '🔇' : '🔊'; };
 
-        // 遊戲循環
+        // 循環
         setInterval(() => {
-            const income = game.mps / 10;
-            game.money += income;
-            game.totalMoney += income;
+            game.money += game.mps / 10;
+            game.totalMoney += game.mps / 10;
             updateUI();
-            if (game.mps > 0) checkLevel();
         }, 100);
+        setInterval(saveGame, 5000);
 
-        initShop();
-        updateUI();
+        init();
     </script>
 </body>
 </html>
