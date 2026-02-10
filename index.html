@@ -212,9 +212,9 @@
             updateUI();
             
             // 恢復裝飾
-            Object.values(game.items).forEach(item => {
-                for(let i=0; i<Math.min(item.count, 5); i++) spawnDecoration(item.icon);
-            });
+            for (let id in game.items) {
+                for(let i=0; i<Math.min(game.items[id].count, 15); i++) spawnDecoration(id);
+            }
         }
 
         function initTabs() {
@@ -253,7 +253,7 @@
                         item.count++;
                         recalcMps();
                         sounds.buy();
-                        if (item.count <= 10) spawnDecoration(item.icon);
+                        if (item.count <= 15) spawnDecoration(id); // 改為傳入 id
                         renderShop(); updateUI(); saveGame();
                     }
                 };
@@ -305,13 +305,36 @@
             if (game.level >= 10) document.getElementById('prestige-btn').style.display = 'block';
         }
 
-        function spawnDecoration(emoji) {
+        // 定義各個設施的專屬區域
+        const ZONES = {
+            capybara: { left: 15, top: 75, spread: 15 }, // 左下草地
+            waiter: { left: 85, top: 75, spread: 10 },   // 右下接待區
+            herbal: { left: 20, top: 45, spread: 12 },   // 中左藥草區
+            outdoor: { left: 80, top: 40, spread: 15 },  // 中右露天區
+            hotel: { left: 50, top: 25, spread: 25 }     // 上方背景區
+        };
+
+        function spawnDecoration(id) {
+            const item = game.items[id];
+            if (!item || !ZONES[id]) return;
+
+            const zone = ZONES[id];
             const el = document.createElement('div');
-            el.className = 'decor'; el.innerText = emoji;
-            el.style.left = Math.random() * 80 + 10 + '%';
-            el.style.top = Math.random() * 60 + 20 + '%';
+            el.className = 'decor';
+            el.innerText = item.icon;
+            
+            // 在指定區域內加入一點隨機位移，讓它看起來自然但不混亂
+            const offsetX = (Math.random() - 0.5) * zone.spread;
+            const offsetY = (Math.random() - 0.5) * (zone.spread / 2);
+            
+            el.style.left = (zone.left + offsetX) + '%';
+            el.style.top = (zone.top + offsetY) + '%';
+            el.style.animationDelay = (Math.random() * 2) + 's';
+            
             document.getElementById('decorations').appendChild(el);
-            if (decorations.childNodes.length > 40) decorations.removeChild(decorations.firstChild);
+            
+            // 如果數量太多，移除最早的（保持效能）
+            if (decorations.childNodes.length > 60) decorations.removeChild(decorations.firstChild);
         }
 
         // 點擊邏輯
