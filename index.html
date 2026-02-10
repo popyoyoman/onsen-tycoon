@@ -18,6 +18,11 @@
             --wood: #8b4513;
         }
 
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
             font-family: 'Noto Sans TC', sans-serif;
             background-color: var(--bg);
@@ -27,6 +32,7 @@
             display: flex;
             height: 100vh;
             overflow: hidden;
+            touch-action: manipulation;
         }
 
         /* 介面佈局 */
@@ -63,7 +69,7 @@
         }
 
         .main-onsen {
-            font-size: 180px;
+            font-size: clamp(100px, 20vw, 180px);
             cursor: pointer;
             transition: all 0.1s;
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
@@ -138,28 +144,31 @@
             display: flex;
             justify-content: space-between;
             z-index: 100;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .stat-card {
             background: rgba(255,255,255,0.9);
-            padding: 15px 25px;
+            padding: 10px 20px;
             border-radius: 50px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             display: flex;
             align-items: center;
             border: 2px solid var(--wood);
+            min-height: 50px;
         }
 
         .stat-val {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             font-weight: bold;
             color: var(--primary);
-            margin-left: 10px;
+            margin-left: 8px;
         }
 
         /* 右側：商店與升級面板 */
         #side-panel {
-            width: 420px;
+            width: 400px;
             background: var(--panel);
             border-left: 4px solid var(--wood);
             display: flex;
@@ -268,11 +277,11 @@
 
         /* 進度條 */
         #level-progress-container {
-            width: 80%;
+            width: 100px;
             height: 10px;
             background: #ddd;
             border-radius: 5px;
-            margin-top: 10px;
+            margin-top: 5px;
             overflow: hidden;
         }
 
@@ -283,10 +292,37 @@
             transition: width 0.3s;
         }
 
+        /* 選單與控制 */
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: white;
+            border: 2px solid var(--wood);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
         /* 響應式 */
-        @media (max-width: 800px) {
+        @media (max-width: 900px) {
             #game-layout { flex-direction: column; }
-            #side-panel { width: 100%; height: 40%; }
+            #side-panel { width: 100%; height: 50%; border-left: none; border-top: 4px solid var(--wood); }
+            #top-bar { top: 10px; left: 10px; }
+            .stat-card { padding: 5px 15px; min-height: 40px; }
+            .stat-val { font-size: 1rem; }
+            .main-onsen { font-size: 120px; }
         }
     </style>
 </head>
@@ -318,6 +354,11 @@
             <div id="pool-area">
                 <div class="main-onsen" id="clicker">♨️</div>
             </div>
+
+            <div id="controls">
+                <div class="icon-btn" id="mute-btn">🔊</div>
+                <div class="icon-btn" id="reset-btn">🔄</div>
+            </div>
         </div>
 
         <div id="side-panel">
@@ -333,8 +374,36 @@
     </div>
 
     <script>
+        // 音效系統
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let muted = false;
+
+        function playSound(freq, type, duration) {
+            if (muted) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        const sounds = {
+            click: () => playSound(440, 'sine', 0.1),
+            buy: () => playSound(880, 'square', 0.2),
+            levelUp: () => {
+                playSound(523.25, 'sine', 0.1);
+                setTimeout(() => playSound(659.25, 'sine', 0.1), 100);
+                setTimeout(() => playSound(783.99, 'sine', 0.3), 200);
+            }
+        };
+
         // 遊戲數據
-        const game = {
+        const defaultGame = {
             money: 0,
             totalMoney: 0,
             level: 1,
@@ -351,12 +420,19 @@
             }
         };
 
+        let game = JSON.parse(localStorage.getItem('onsen_save')) || JSON.parse(JSON.stringify(defaultGame));
+
         const moneyEl = document.getElementById('money');
         const mpsEl = document.getElementById('mps');
         const levelEl = document.getElementById('level');
         const progEl = document.getElementById('level-progress-bar');
         const shopContent = document.getElementById('shop-content');
         const decorations = document.getElementById('decorations');
+
+        // 保存遊戲
+        function saveGame() {
+            localStorage.setItem('onsen_save', JSON.stringify(game));
+        }
 
         // 初始化商店
         function initShop() {
@@ -367,17 +443,21 @@
                 div.className = 'shop-item';
                 div.id = `item-${id}`;
                 div.innerHTML = `
-                    <div class="item-count" id="count-${id}">0</div>
+                    <div class="item-count" id="count-${id}">${item.count}</div>
                     <div class="item-icon">${item.icon}</div>
                     <div class="item-details">
                         <span class="item-name">${item.name}</span>
                         <span class="item-desc">${item.desc}</span>
                         <div class="item-stats">+${item.mps} 圓/秒</div>
                     </div>
-                    <div class="item-cost-tag" id="cost-${id}">${item.baseCost}</div>
+                    <div class="item-cost-tag" id="cost-${id}">0</div>
                 `;
                 div.onclick = () => buyItem(id);
                 shopContent.appendChild(div);
+            }
+            // 恢復裝飾物
+            for (let id in game.items) {
+                for (let i = 0; i < Math.min(game.items[id].count, 10); i++) spawnDecoration(game.items[id].icon);
             }
         }
 
@@ -390,10 +470,11 @@
                 item.count++;
                 game.mps += item.mps;
                 
-                // 視覺回饋
-                spawnDecoration(item.icon);
+                sounds.buy();
+                if (item.count <= 10) spawnDecoration(item.icon);
                 updateUI();
                 checkLevel();
+                saveGame();
             }
         }
 
@@ -403,22 +484,21 @@
             el.innerText = emoji;
             el.style.left = Math.random() * 80 + 10 + '%';
             el.style.top = Math.random() * 60 + 20 + '%';
-            el.style.animationDelay = (Math.random() * 2) + 's'; // 隨機延遲讓動作錯開
+            el.style.animationDelay = (Math.random() * 2) + 's';
             decorations.appendChild(el);
-            
-            // 限制裝飾數量
-            if (decorations.childNodes.length > 30) decorations.removeChild(decorations.firstChild);
+            if (decorations.childNodes.length > 50) decorations.removeChild(decorations.firstChild);
         }
 
         function checkLevel() {
-            const nextLevelExp = Math.pow(game.level, 2) * 100;
+            const nextLevelExp = Math.pow(game.level, 2) * 200;
             if (game.totalMoney >= nextLevelExp) {
                 game.level++;
                 game.clickPower = 1 + Math.floor(game.level * 1.5);
-                // 升級特效
+                sounds.levelUp();
                 alert(`恭喜！渡假村升級到等級 ${game.level}！\n點擊威力提升！`);
+                saveGame();
             }
-            const currentLevelBase = Math.pow(game.level - 1, 2) * 100;
+            const currentLevelBase = Math.pow(game.level - 1, 2) * 200;
             const progress = ((game.totalMoney - currentLevelBase) / (nextLevelExp - currentLevelBase)) * 100;
             progEl.style.width = Math.min(progress, 100) + '%';
         }
@@ -435,20 +515,24 @@
                 const costEl = document.getElementById(`cost-${id}`);
                 const countEl = document.getElementById(`count-${id}`);
                 
-                costEl.innerText = cost.toLocaleString();
-                countEl.innerText = item.count;
+                if (costEl) costEl.innerText = cost.toLocaleString();
+                if (countEl) countEl.innerText = item.count;
                 
-                if (game.money >= cost) itemEl.classList.remove('locked');
-                else itemEl.classList.add('locked');
+                if (itemEl) {
+                    if (game.money >= cost) itemEl.classList.remove('locked');
+                    else itemEl.classList.add('locked');
+                }
             }
         }
 
         // 點擊事件
         document.getElementById('clicker').addEventListener('click', (e) => {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
             game.money += game.clickPower;
             game.totalMoney += game.clickPower;
             
-            // 彈出文字
+            sounds.click();
+            
             const pop = document.createElement('div');
             pop.className = 'click-pop animate__animated animate__fadeOutUp';
             pop.innerText = `+${game.clickPower}`;
@@ -457,9 +541,7 @@
             document.body.appendChild(pop);
             setTimeout(() => pop.remove(), 800);
 
-            // 產生蒸氣
             createSteam(e.clientX, e.clientY);
-            
             updateUI();
             checkLevel();
         });
@@ -477,13 +559,22 @@
             }
         }
 
-        // 定期產生環境蒸氣
-        setInterval(() => {
-            if (game.level > 2) {
-                const pool = document.getElementById('clicker').getBoundingClientRect();
-                createSteam(pool.left + pool.width / 2, pool.top + pool.height / 2);
+        // 控制功能
+        document.getElementById('mute-btn').onclick = function() {
+            muted = !muted;
+            this.innerText = muted ? '🔇' : '🔊';
+        };
+
+        document.getElementById('reset-btn').onclick = function() {
+            if (confirm('確定要拆除整個渡假村重新開始嗎？')) {
+                game = JSON.parse(JSON.stringify(defaultGame));
+                saveGame();
+                location.reload();
             }
-        }, 2000);
+        };
+
+        // 自動保存
+        setInterval(saveGame, 10000);
 
         // 遊戲循環
         setInterval(() => {
