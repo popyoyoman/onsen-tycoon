@@ -42,9 +42,32 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: background 10s ease; /* 背景平滑過渡 */
         }
 
-        #skyline { position: absolute; top: 20px; font-size: 100px; opacity: 0.3; user-select: none; }
+        /* 環境圖層 */
+        #env-layer { position: absolute; width: 100%; height: 100%; pointer-events: none; }
+        .cloud { position: absolute; font-size: 60px; opacity: 0.5; animation: drift linear infinite; }
+        .star { position: absolute; font-size: 15px; color: gold; opacity: 0; animation: twinkle 3s infinite; }
+        .bird { position: absolute; font-size: 20px; animation: bird-fly linear infinite; }
+        .tree-static { position: absolute; font-size: 50px; bottom: 15%; filter: brightness(0.8); z-index: 1; }
+
+        @keyframes drift {
+            from { transform: translateX(-100px); }
+            to { transform: translateX(100vw); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes bird-fly {
+            from { transform: translate(-50px, 0) scaleX(1); }
+            to { transform: translate(100vw, -50px) scaleX(1); }
+        }
+
+        #skyline { position: absolute; top: 20px; font-size: 100px; opacity: 0.3; user-select: none; z-index: 2; }
 
         .main-onsen {
             font-size: clamp(100px, 20vw, 180px);
@@ -114,6 +137,7 @@
 
     <div id="game-layout">
         <div id="resort-view">
+            <div id="env-layer"></div>
             <div id="skyline">🗻</div>
             
             <div id="top-bar">
@@ -196,8 +220,85 @@
             game.mps = Object.values(game.items).reduce((acc, i) => acc + (i.mps * i.count), 0) * game.prestigeMult;
         }
 
+        // 環境系統
+        function initEnvironment() {
+            const layer = document.getElementById('env-layer');
+            
+            // 放置靜態樹木
+            for (let i = 0; i < 12; i++) {
+                const tree = document.createElement('div');
+                tree.className = 'tree-static';
+                tree.innerText = Math.random() > 0.5 ? '🌲' : '🌳';
+                tree.style.left = (Math.random() * 100) + '%';
+                tree.style.fontSize = (30 + Math.random() * 30) + 'px';
+                tree.style.bottom = (10 + Math.random() * 10) + '%';
+                layer.appendChild(tree);
+            }
+
+            // 定期產生雲朵
+            setInterval(() => {
+                const cloud = document.createElement('div');
+                cloud.className = 'cloud';
+                cloud.innerText = '☁️';
+                cloud.style.top = (10 + Math.random() * 30) + '%';
+                cloud.style.animationDuration = (20 + Math.random() * 40) + 's';
+                layer.appendChild(cloud);
+                setTimeout(() => cloud.remove(), 60000);
+            }, 8000);
+
+            // 定期產生鳥類
+            setInterval(() => {
+                const bird = document.createElement('div');
+                bird.className = 'bird';
+                bird.innerText = '🐦';
+                bird.style.top = (10 + Math.random() * 20) + '%';
+                bird.style.animationDuration = (10 + Math.random() * 10) + 's';
+                layer.appendChild(bird);
+                setTimeout(() => bird.remove(), 20000);
+            }, 15000);
+
+            // 日夜循環
+            updateSky();
+            setInterval(updateSky, 60000); // 每一分鐘檢查一次時間
+        }
+
+        function updateSky() {
+            const hour = new Date().getHours();
+            const view = document.getElementById('resort-view');
+            const skyline = document.getElementById('skyline');
+            const env = document.getElementById('env-layer');
+
+            // 移除舊星星
+            document.querySelectorAll('.star').forEach(s => s.remove());
+
+            if (hour >= 18 || hour < 6) { // 夜晚
+                view.style.background = 'linear-gradient(to bottom, #1a1a2e, #16213e, #0f3460)';
+                skyline.innerText = '🌙';
+                // 產生星星
+                for (let i = 0; i < 50; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.innerText = '✨';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 50 + '%';
+                    star.style.animationDelay = Math.random() * 3 + 's';
+                    env.appendChild(star);
+                }
+            } else if (hour >= 6 && hour < 10) { // 清晨
+                view.style.background = 'linear-gradient(to bottom, #ff9a9e, #fad0c4, #fad0c4)';
+                skyline.innerText = '🌅';
+            } else if (hour >= 16 && hour < 18) { // 黃昏
+                view.style.background = 'linear-gradient(to bottom, #4facfe, #00f2fe, #f093fb)';
+                skyline.innerText = '🌇';
+            } else { // 白天
+                view.style.background = 'linear-gradient(to bottom, #aed6f1 0%, #d6eaf8 100%)';
+                skyline.innerText = '☀️';
+            }
+        }
+
         // 初始化
         function init() {
+            initEnvironment();
             // 離線收益
             const offlineTime = (Date.now() - game.lastSave) / 1000;
             if (offlineTime > 60 && game.mps > 0) {
