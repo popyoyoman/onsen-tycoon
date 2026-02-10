@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>極上溫泉大亨 - Onsen Tycoon</title>
+    <style>
+        :root {
+            --primary: #d35400;
+            --secondary: #e67e22;
+            --bg: #fdf2e9;
+            --panel: #ffffff;
+            --text: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 側邊欄商店 */
+        #shop {
+            width: 300px;
+            background: var(--panel);
+            border-left: 2px solid #edbb99;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+            overflow-y: auto;
+        }
+
+        h2 { border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-top: 0; }
+
+        /* 主遊戲區 */
+        #main-game {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .currency-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .per-second {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .onsen-container {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .onsen-container:active { transform: scale(0.92); }
+
+        #onsen-sprite {
+            font-size: 120px;
+            user-select: none;
+        }
+
+        /* 商店按鈕 */
+        .item {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item:hover:not(.disabled) {
+            background: #fdf2e9;
+            border-color: var(--secondary);
+            transform: translateX(-5px);
+        }
+
+        .item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
+
+        .item-info b { display: block; font-size: 1.1rem; }
+        .item-info span { font-size: 0.85rem; color: #666; }
+
+        .item-cost {
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .count {
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+
+        /* 特效 */
+        .floating-text {
+            position: absolute;
+            font-weight: bold;
+            color: var(--secondary);
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+            font-size: 1.5rem;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+
+        .log {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.8);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-game">
+        <div class="currency-display">💰 <span id="money">0</span> 圓</div>
+        <div class="per-second">秒產：<span id="mps">0</span> 圓</div>
+        
+        <div class="onsen-container" id="onsen-click">
+            <div id="onsen-sprite">♨️</div>
+        </div>
+
+        <div class="log" id="game-log">歡迎來到你的溫泉鄉！點擊溫泉開始賺錢。</div>
+    </div>
+
+    <div id="shop">
+        <h2>🏯 設施擴建</h2>
+        
+        <div class="item" id="buy-capybara" data-cost="15" data-mps="1">
+            <div class="item-info">
+                <b>🐹 水豚泳客</b>
+                <span>雖然不付錢，但能吸引人。 (MPS +1)</span>
+            </div>
+            <div class="item-cost">15 <span class="count" id="count-capybara">0</span></div>
+        </div>
+
+        <div class="item" id="buy-waiter" data-cost="100" data-mps="5">
+            <div class="item-info">
+                <b>👨‍🍳 溫泉店員</b>
+                <span>提供毛巾與清酒。 (MPS +5)</span>
+            </div>
+            <div class="item-cost">100 <span class="count" id="count-waiter">0</span></div>
+        </div>
+
+        <div class="item" id="buy-filter" data-cost="500" data-mps="20">
+            <div class="item-info">
+                <b>🌀 高級過濾器</b>
+                <span>讓水質清澈見底。 (MPS +20)</span>
+            </div>
+            <div class="item-cost">500 <span class="count" id="count-filter">0</span></div>
+        </div>
+
+        <div class="item" id="buy-outdoor" data-cost="2000" data-mps="80">
+            <div class="item-info">
+                <b>🏞️ 露天風呂</b>
+                <span>一邊泡湯一邊看富士山。 (MPS +80)</span>
+            </div>
+            <div class="item-cost">2000 <span class="count" id="count-outdoor">0</span></div>
+        </div>
+
+        <div class="item" id="buy-hotel" data-cost="10000" data-mps="300">
+            <div class="item-info">
+                <b>🏨 五星級旅館</b>
+                <span>直接升級成渡假村。 (MPS +300)</span>
+            </div>
+            <div class="item-cost">10000 <span class="count" id="count-hotel">0</span></div>
+        </div>
+    </div>
+
+    <script>
+        let money = 0;
+        let totalMps = 0;
+        let clickPower = 1;
+
+        const state = {
+            capybara: { count: 0, cost: 15, mps: 1 },
+            waiter: { count: 0, cost: 100, mps: 5 },
+            filter: { count: 0, cost: 500, mps: 20 },
+            outdoor: { count: 0, cost: 2000, mps: 80 },
+            hotel: { count: 0, cost: 10000, mps: 300 }
+        };
+
+        const moneyEl = document.getElementById('money');
+        const mpsEl = document.getElementById('mps');
+        const logEl = document.getElementById('game-log');
+
+        function updateUI() {
+            moneyEl.innerText = Math.floor(money).toLocaleString();
+            mpsEl.innerText = totalMps.toLocaleString();
+
+            for (let id in state) {
+                const btn = document.getElementById(`buy-${id}`);
+                const countEl = document.getElementById(`count-${id}`);
+                const costEl = btn.querySelector('.item-cost');
+
+                countEl.innerText = state[id].count;
+                costEl.innerHTML = `${Math.floor(state[id].cost).toLocaleString()} <span class="count">${state[id].count}</span>`;
+
+                if (money >= state[id].cost) {
+                    btn.classList.remove('disabled');
+                } else {
+                    btn.classList.add('disabled');
+                }
+            }
+        }
+
+        function addLog(msg) {
+            logEl.innerText = msg;
+        }
+
+        // 點擊邏輯
+        document.getElementById('onsen-click').addEventListener('click', (e) => {
+            money += clickPower;
+            createFloatingText(e.clientX, e.clientY, `+${clickPower}`);
+            updateUI();
+        });
+
+        function createFloatingText(x, y, text) {
+            const el = document.createElement('div');
+            el.className = 'floating-text';
+            el.innerText = text;
+            el.style.left = `${x}px`;
+            el.style.top = `${y}px`;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 1000);
+        }
+
+        // 購買邏輯
+        Object.keys(state).forEach(id => {
+            document.getElementById(`buy-${id}`).addEventListener('click', () => {
+                const item = state[id];
+                if (money >= item.cost) {
+                    money -= item.cost;
+                    item.count++;
+                    totalMps += item.mps;
+                    item.cost *= 1.2; // 價格成長
+                    
+                    // 點擊力隨等級增加 (每10個建築+1點擊力)
+                    clickPower = 1 + Math.floor(Object.values(state).reduce((a, b) => a + b.count, 0) / 5);
+                    
+                    addLog(`你購買了 ${document.querySelector(`#buy-${id} b`).innerText}！`);
+                    updateUI();
+                }
+            });
+        });
+
+        // 自動產錢 (每 100ms 跑一次)
+        setInterval(() => {
+            if (totalMps > 0) {
+                money += totalMps / 10;
+                updateUI();
+            }
+        }, 100);
+
+        // 初始化
+        updateUI();
+    </script>
+</body>
+</html>
