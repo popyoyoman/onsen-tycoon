@@ -65,13 +65,30 @@
         .main-onsen {
             font-size: 180px;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.1s;
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
             user-select: none;
+            animation: float-slow 3s ease-in-out infinite;
         }
 
-        .main-onsen:hover { transform: scale(1.05); }
-        .main-onsen:active { transform: scale(0.9); }
+        .main-onsen:active { 
+            animation: shake 0.2s infinite;
+            transform: scale(0.95);
+        }
+
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+        }
 
         /* 裝飾物容器 */
         #decorations {
@@ -84,7 +101,32 @@
         .decor {
             position: absolute;
             font-size: 40px;
-            animation: fadeIn 1s;
+            animation: bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), bob 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce-in {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes bob {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        /* 蒸氣動畫 */
+        .steam-particle {
+            position: absolute;
+            color: white;
+            opacity: 0.6;
+            font-size: 24px;
+            pointer-events: none;
+            animation: steam-rise 3s linear forwards;
+        }
+
+        @keyframes steam-rise {
+            0% { transform: translateY(0) scale(1); opacity: 0.6; }
+            100% { transform: translateY(-200px) scale(2); opacity: 0; }
         }
 
         /* 頂部數據列 */
@@ -361,6 +403,7 @@
             el.innerText = emoji;
             el.style.left = Math.random() * 80 + 10 + '%';
             el.style.top = Math.random() * 60 + 20 + '%';
+            el.style.animationDelay = (Math.random() * 2) + 's'; // 隨機延遲讓動作錯開
             decorations.appendChild(el);
             
             // 限制裝飾數量
@@ -405,6 +448,7 @@
             game.money += game.clickPower;
             game.totalMoney += game.clickPower;
             
+            // 彈出文字
             const pop = document.createElement('div');
             pop.className = 'click-pop animate__animated animate__fadeOutUp';
             pop.innerText = `+${game.clickPower}`;
@@ -412,10 +456,34 @@
             pop.style.top = e.clientY + 'px';
             document.body.appendChild(pop);
             setTimeout(() => pop.remove(), 800);
+
+            // 產生蒸氣
+            createSteam(e.clientX, e.clientY);
             
             updateUI();
             checkLevel();
         });
+
+        function createSteam(x, y) {
+            for (let i = 0; i < 3; i++) {
+                const s = document.createElement('div');
+                s.className = 'steam-particle';
+                s.innerText = '☁️';
+                s.style.left = (x - 20 + Math.random() * 40) + 'px';
+                s.style.top = y + 'px';
+                s.style.animationDelay = (Math.random() * 0.5) + 's';
+                document.body.appendChild(s);
+                setTimeout(() => s.remove(), 3000);
+            }
+        }
+
+        // 定期產生環境蒸氣
+        setInterval(() => {
+            if (game.level > 2) {
+                const pool = document.getElementById('clicker').getBoundingClientRect();
+                createSteam(pool.left + pool.width / 2, pool.top + pool.height / 2);
+            }
+        }, 2000);
 
         // 遊戲循環
         setInterval(() => {
