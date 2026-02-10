@@ -3,19 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>極上溫泉大亨 - Onsen Tycoon</title>
+    <title>極上溫泉物語：豪華渡假村 - Onsen Resort Tycoon</title>
+    <!-- 引入動畫庫與圖示 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #d35400;
             --secondary: #e67e22;
+            --accent: #27ae60;
             --bg: #fdf2e9;
             --panel: #ffffff;
             --text: #2c3e50;
+            --wood: #8b4513;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Noto Sans TC', sans-serif;
             background-color: var(--bg);
+            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
             color: var(--text);
             margin: 0;
             display: flex;
@@ -23,269 +29,404 @@
             overflow: hidden;
         }
 
-        /* 側邊欄商店 */
-        #shop {
-            width: 300px;
-            background: var(--panel);
-            border-left: 2px solid #edbb99;
-            padding: 20px;
+        /* 介面佈局 */
+        #game-layout {
             display: flex;
-            flex-direction: column;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.05);
-            overflow-y: auto;
+            width: 100%;
+            height: 100%;
         }
 
-        h2 { border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-top: 0; }
-
-        /* 主遊戲區 */
-        #main-game {
+        /* 左側：渡假村視覺區 */
+        #resort-view {
             flex-grow: 1;
+            position: relative;
+            background: linear-gradient(to bottom, #aed6f1 0%, #d6eaf8 100%);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            position: relative;
         }
 
-        .currency-display {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .per-second {
-            font-size: 1.1rem;
-            color: #7f8c8d;
-            margin-bottom: 30px;
-        }
-
-        .onsen-container {
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-
-        .onsen-container:active { transform: scale(0.92); }
-
-        #onsen-sprite {
-            font-size: 120px;
+        #skyline {
+            position: absolute;
+            top: 20px;
+            font-size: 100px;
+            opacity: 0.3;
             user-select: none;
         }
 
-        /* 商店按鈕 */
-        .item {
+        #pool-area {
+            margin-top: auto;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-onsen {
+            font-size: 180px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+            user-select: none;
+        }
+
+        .main-onsen:hover { transform: scale(1.05); }
+        .main-onsen:active { transform: scale(0.9); }
+
+        /* 裝飾物容器 */
+        #decorations {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .decor {
+            position: absolute;
+            font-size: 40px;
+            animation: fadeIn 1s;
+        }
+
+        /* 頂部數據列 */
+        #top-bar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 100;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.9);
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            border: 2px solid var(--wood);
+        }
+
+        .stat-val {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-left: 10px;
+        }
+
+        /* 右側：商店與升級面板 */
+        #side-panel {
+            width: 420px;
+            background: var(--panel);
+            border-left: 4px solid var(--wood);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 20px rgba(0,0,0,0.1);
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--wood);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .tab.active { background: var(--primary); }
+
+        .panel-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        /* 商店物件 */
+        .shop-item {
             background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 10px;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .item:hover:not(.disabled) {
-            background: #fdf2e9;
+        .shop-item:hover:not(.locked) {
             border-color: var(--secondary);
-            transform: translateX(-5px);
+            background: #fff9f5;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
-        .item.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .shop-item.locked {
+            opacity: 0.6;
             filter: grayscale(1);
+            cursor: not-allowed;
         }
 
-        .item-info b { display: block; font-size: 1.1rem; }
-        .item-info span { font-size: 0.85rem; color: #666; }
+        .item-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            width: 60px;
+            text-align: center;
+        }
 
-        .item-cost {
+        .item-details { flex-grow: 1; }
+        .item-name { font-weight: bold; font-size: 1.1rem; display: block; }
+        .item-desc { font-size: 0.85rem; color: #7f8c8d; }
+
+        .item-stats {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: var(--accent);
             font-weight: bold;
-            color: #27ae60;
         }
 
-        .count {
-            background: var(--primary);
-            color: white;
-            padding: 2px 8px;
+        .item-cost-tag {
+            background: var(--bg);
+            padding: 5px 12px;
             border-radius: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .item-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--wood);
+            color: white;
+            padding: 2px 10px;
+            border-bottom-left-radius: 10px;
             font-size: 0.8rem;
-            margin-left: 5px;
         }
 
         /* 特效 */
-        .floating-text {
+        .click-pop {
             position: absolute;
-            font-weight: bold;
-            color: var(--secondary);
             pointer-events: none;
-            animation: floatUp 1s ease-out forwards;
-            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 24px;
+            z-index: 1000;
+            text-shadow: 1px 1px 2px white;
         }
 
-        @keyframes floatUp {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-100px); opacity: 0; }
-        }
-
-        .log {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(255,255,255,0.8);
-            padding: 10px;
+        /* 進度條 */
+        #level-progress-container {
+            width: 80%;
+            height: 10px;
+            background: #ddd;
             border-radius: 5px;
-            font-size: 0.9rem;
-            max-width: 300px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        #level-progress-bar {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* 響應式 */
+        @media (max-width: 800px) {
+            #game-layout { flex-direction: column; }
+            #side-panel { width: 100%; height: 40%; }
         }
     </style>
 </head>
 <body>
 
-    <div id="main-game">
-        <div class="currency-display">💰 <span id="money">0</span> 圓</div>
-        <div class="per-second">秒產：<span id="mps">0</span> 圓</div>
-        
-        <div class="onsen-container" id="onsen-click">
-            <div id="onsen-sprite">♨️</div>
+    <div id="game-layout">
+        <div id="resort-view">
+            <div id="skyline">🗻</div>
+            
+            <div id="top-bar">
+                <div class="stat-card">
+                    💰 <span class="stat-val" id="money">0</span>
+                </div>
+                <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
+                    <div style="display: flex; align-items: center;">
+                        ⭐ 等級 <span class="stat-val" id="level" style="font-size: 1.2rem;">1</span>
+                    </div>
+                    <div id="level-progress-container">
+                        <div id="level-progress-bar"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    🕒 <span class="stat-val" id="mps" style="color: var(--accent);">0</span> <small>/s</small>
+                </div>
+            </div>
+
+            <div id="decorations"></div>
+
+            <div id="pool-area">
+                <div class="main-onsen" id="clicker">♨️</div>
+            </div>
         </div>
 
-        <div class="log" id="game-log">歡迎來到你的溫泉鄉！點擊溫泉開始賺錢。</div>
-    </div>
-
-    <div id="shop">
-        <h2>🏯 設施擴建</h2>
-        
-        <div class="item" id="buy-capybara" data-cost="15" data-mps="1">
-            <div class="item-info">
-                <b>🐹 水豚泳客</b>
-                <span>雖然不付錢，但能吸引人。 (MPS +1)</span>
+        <div id="side-panel">
+            <div class="tabs">
+                <div class="tab active" data-tab="shop">建設商店</div>
+                <div class="tab" data-tab="upgrades">技術研發</div>
             </div>
-            <div class="item-cost">15 <span class="count" id="count-capybara">0</span></div>
-        </div>
-
-        <div class="item" id="buy-waiter" data-cost="100" data-mps="5">
-            <div class="item-info">
-                <b>👨‍🍳 溫泉店員</b>
-                <span>提供毛巾與清酒。 (MPS +5)</span>
+            
+            <div class="panel-content" id="shop-content">
+                <!-- 商店內容由 JS 動態生成 -->
             </div>
-            <div class="item-cost">100 <span class="count" id="count-waiter">0</span></div>
-        </div>
-
-        <div class="item" id="buy-filter" data-cost="500" data-mps="20">
-            <div class="item-info">
-                <b>🌀 高級過濾器</b>
-                <span>讓水質清澈見底。 (MPS +20)</span>
-            </div>
-            <div class="item-cost">500 <span class="count" id="count-filter">0</span></div>
-        </div>
-
-        <div class="item" id="buy-outdoor" data-cost="2000" data-mps="80">
-            <div class="item-info">
-                <b>🏞️ 露天風呂</b>
-                <span>一邊泡湯一邊看富士山。 (MPS +80)</span>
-            </div>
-            <div class="item-cost">2000 <span class="count" id="count-outdoor">0</span></div>
-        </div>
-
-        <div class="item" id="buy-hotel" data-cost="10000" data-mps="300">
-            <div class="item-info">
-                <b>🏨 五星級旅館</b>
-                <span>直接升級成渡假村。 (MPS +300)</span>
-            </div>
-            <div class="item-cost">10000 <span class="count" id="count-hotel">0</span></div>
         </div>
     </div>
 
     <script>
-        let money = 0;
-        let totalMps = 0;
-        let clickPower = 1;
-
-        const state = {
-            capybara: { count: 0, cost: 15, mps: 1 },
-            waiter: { count: 0, cost: 100, mps: 5 },
-            filter: { count: 0, cost: 500, mps: 20 },
-            outdoor: { count: 0, cost: 2000, mps: 80 },
-            hotel: { count: 0, cost: 10000, mps: 300 }
+        // 遊戲數據
+        const game = {
+            money: 0,
+            totalMoney: 0,
+            level: 1,
+            exp: 0,
+            mps: 0,
+            clickPower: 1,
+            items: {
+                capybara: { name: "水豚家族", icon: "🐹", baseCost: 15, mps: 1, count: 0, desc: "可愛就是正義，吸引大量遊客。" },
+                waiter: { name: "專業招待", icon: "👨‍💼", baseCost: 100, mps: 5, count: 0, desc: "提供頂級清酒與毛巾服務。" },
+                herbal: { name: "藥草浴池", icon: "🌿", baseCost: 500, mps: 18, count: 0, desc: "加入昂貴藥材，舒緩身心。" },
+                outdoor: { name: "雪景露天風呂", icon: "❄️", baseCost: 2000, mps: 70, count: 0, desc: "在飄雪中享受極致溫暖。" },
+                shrine: { name: "祈福神社", icon: "⛩️", baseCost: 8000, mps: 250, count: 0, desc: "吸引信眾前來，香火與溫泉並存。" },
+                hotel: { name: "雲海渡假村", icon: "🏰", baseCost: 50000, mps: 1200, count: 0, desc: "俯瞰整片山谷的頂級套房。" }
+            }
         };
 
         const moneyEl = document.getElementById('money');
         const mpsEl = document.getElementById('mps');
-        const logEl = document.getElementById('game-log');
+        const levelEl = document.getElementById('level');
+        const progEl = document.getElementById('level-progress-bar');
+        const shopContent = document.getElementById('shop-content');
+        const decorations = document.getElementById('decorations');
+
+        // 初始化商店
+        function initShop() {
+            shopContent.innerHTML = '';
+            for (let id in game.items) {
+                const item = game.items[id];
+                const div = document.createElement('div');
+                div.className = 'shop-item';
+                div.id = `item-${id}`;
+                div.innerHTML = `
+                    <div class="item-count" id="count-${id}">0</div>
+                    <div class="item-icon">${item.icon}</div>
+                    <div class="item-details">
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-desc">${item.desc}</span>
+                        <div class="item-stats">+${item.mps} 圓/秒</div>
+                    </div>
+                    <div class="item-cost-tag" id="cost-${id}">${item.baseCost}</div>
+                `;
+                div.onclick = () => buyItem(id);
+                shopContent.appendChild(div);
+            }
+        }
+
+        function buyItem(id) {
+            const item = game.items[id];
+            const cost = Math.floor(item.baseCost * Math.pow(1.15, item.count));
+            
+            if (game.money >= cost) {
+                game.money -= cost;
+                item.count++;
+                game.mps += item.mps;
+                
+                // 視覺回饋
+                spawnDecoration(item.icon);
+                updateUI();
+                checkLevel();
+            }
+        }
+
+        function spawnDecoration(emoji) {
+            const el = document.createElement('div');
+            el.className = 'decor';
+            el.innerText = emoji;
+            el.style.left = Math.random() * 80 + 10 + '%';
+            el.style.top = Math.random() * 60 + 20 + '%';
+            decorations.appendChild(el);
+            
+            // 限制裝飾數量
+            if (decorations.childNodes.length > 30) decorations.removeChild(decorations.firstChild);
+        }
+
+        function checkLevel() {
+            const nextLevelExp = Math.pow(game.level, 2) * 100;
+            if (game.totalMoney >= nextLevelExp) {
+                game.level++;
+                game.clickPower = 1 + Math.floor(game.level * 1.5);
+                // 升級特效
+                alert(`恭喜！渡假村升級到等級 ${game.level}！\n點擊威力提升！`);
+            }
+            const currentLevelBase = Math.pow(game.level - 1, 2) * 100;
+            const progress = ((game.totalMoney - currentLevelBase) / (nextLevelExp - currentLevelBase)) * 100;
+            progEl.style.width = Math.min(progress, 100) + '%';
+        }
 
         function updateUI() {
-            moneyEl.innerText = Math.floor(money).toLocaleString();
-            mpsEl.innerText = totalMps.toLocaleString();
+            moneyEl.innerText = Math.floor(game.money).toLocaleString();
+            mpsEl.innerText = game.mps.toLocaleString();
+            levelEl.innerText = game.level;
 
-            for (let id in state) {
-                const btn = document.getElementById(`buy-${id}`);
+            for (let id in game.items) {
+                const item = game.items[id];
+                const cost = Math.floor(item.baseCost * Math.pow(1.15, item.count));
+                const itemEl = document.getElementById(`item-${id}`);
+                const costEl = document.getElementById(`cost-${id}`);
                 const countEl = document.getElementById(`count-${id}`);
-                const costEl = btn.querySelector('.item-cost');
-
-                countEl.innerText = state[id].count;
-                costEl.innerHTML = `${Math.floor(state[id].cost).toLocaleString()} <span class="count">${state[id].count}</span>`;
-
-                if (money >= state[id].cost) {
-                    btn.classList.remove('disabled');
-                } else {
-                    btn.classList.add('disabled');
-                }
+                
+                costEl.innerText = cost.toLocaleString();
+                countEl.innerText = item.count;
+                
+                if (game.money >= cost) itemEl.classList.remove('locked');
+                else itemEl.classList.add('locked');
             }
         }
 
-        function addLog(msg) {
-            logEl.innerText = msg;
-        }
-
-        // 點擊邏輯
-        document.getElementById('onsen-click').addEventListener('click', (e) => {
-            money += clickPower;
-            createFloatingText(e.clientX, e.clientY, `+${clickPower}`);
+        // 點擊事件
+        document.getElementById('clicker').addEventListener('click', (e) => {
+            game.money += game.clickPower;
+            game.totalMoney += game.clickPower;
+            
+            const pop = document.createElement('div');
+            pop.className = 'click-pop animate__animated animate__fadeOutUp';
+            pop.innerText = `+${game.clickPower}`;
+            pop.style.left = e.clientX + 'px';
+            pop.style.top = e.clientY + 'px';
+            document.body.appendChild(pop);
+            setTimeout(() => pop.remove(), 800);
+            
             updateUI();
+            checkLevel();
         });
 
-        function createFloatingText(x, y, text) {
-            const el = document.createElement('div');
-            el.className = 'floating-text';
-            el.innerText = text;
-            el.style.left = `${x}px`;
-            el.style.top = `${y}px`;
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 1000);
-        }
-
-        // 購買邏輯
-        Object.keys(state).forEach(id => {
-            document.getElementById(`buy-${id}`).addEventListener('click', () => {
-                const item = state[id];
-                if (money >= item.cost) {
-                    money -= item.cost;
-                    item.count++;
-                    totalMps += item.mps;
-                    item.cost *= 1.2; // 價格成長
-                    
-                    // 點擊力隨等級增加 (每10個建築+1點擊力)
-                    clickPower = 1 + Math.floor(Object.values(state).reduce((a, b) => a + b.count, 0) / 5);
-                    
-                    addLog(`你購買了 ${document.querySelector(`#buy-${id} b`).innerText}！`);
-                    updateUI();
-                }
-            });
-        });
-
-        // 自動產錢 (每 100ms 跑一次)
+        // 遊戲循環
         setInterval(() => {
-            if (totalMps > 0) {
-                money += totalMps / 10;
-                updateUI();
-            }
+            const income = game.mps / 10;
+            game.money += income;
+            game.totalMoney += income;
+            updateUI();
+            if (game.mps > 0) checkLevel();
         }, 100);
 
-        // 初始化
+        initShop();
         updateUI();
     </script>
 </body>
