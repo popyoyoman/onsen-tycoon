@@ -13,62 +13,10 @@
             --secondary: #7f8c8d;
             --card-bg: #ffffff;
             --border: #e1e4e8;
-            --overlay: rgba(0,0,0,0.7);
+            --overlay: rgba(0,0,0,0.8);
         }
 
-        /* Modal 樣式 */
-        #story-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: var(--overlay);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: white;
-            width: 100%;
-            max-width: 800px;
-            max-height: 90vh;
-            border-radius: 15px;
-            overflow-y: auto;
-            position: relative;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 20px; right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--secondary);
-        }
-
-        .modal-body {
-            line-height: 1.8;
-            font-size: 1.1rem;
-            color: #34495e;
-        }
-
-        .modal-body h2 {
-            font-family: 'Noto Serif TC', serif;
-            color: var(--accent);
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        .modal-body blockquote {
-            border-left: 4px solid var(--accent);
-            padding-left: 20px;
-            margin: 20px 0;
-            color: var(--secondary);
-            font-style: italic;
-        }
+        * { box-sizing: border-box; }
 
         body {
             font-family: 'Noto Sans TC', sans-serif;
@@ -80,19 +28,6 @@
             flex-direction: column;
             min-height: 100vh;
         }
-        /* ... 略過其餘 CSS ... */
-    </style>
-</head>
-<body>
-
-    <div id="story-modal">
-        <div class="modal-content">
-            <span class="close-modal" id="close-modal">&times;</span>
-            <div class="modal-body" id="modal-body">
-                <!-- 內容動態插入 -->
-            </div>
-        </div>
-    </div>
 
         header {
             background: var(--primary);
@@ -121,7 +56,6 @@
             flex-grow: 1;
         }
 
-        /* 篩選列 */
         .filter-bar {
             background: white;
             padding: 20px;
@@ -151,7 +85,6 @@
             border-color: var(--accent);
         }
 
-        /* 故事網格 */
         .story-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -167,6 +100,7 @@
             display: flex;
             flex-direction: column;
             border: 1px solid var(--border);
+            cursor: pointer;
         }
 
         .story-card:hover {
@@ -234,7 +168,55 @@
             gap: 5px;
         }
 
-        .btn-read:hover { text-decoration: underline; }
+        /* Modal 樣式 */
+        #story-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--overlay);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 800px;
+            max-height: 85vh;
+            border-radius: 15px;
+            overflow-y: auto;
+            position: relative;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px; right: 25px;
+            font-size: 30px;
+            cursor: pointer;
+            color: var(--secondary);
+            line-height: 1;
+        }
+
+        .modal-body {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #34495e;
+        }
+
+        .modal-body h2 {
+            font-family: 'Noto Serif TC', serif;
+            color: var(--accent);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+
+        .modal-body b { color: var(--primary); }
 
         footer {
             text-align: center;
@@ -246,6 +228,7 @@
         @media (max-width: 600px) {
             .story-grid { grid-template-columns: 1fr; }
             header h1 { font-size: 2rem; }
+            .modal-content { padding: 25px; }
         }
     </style>
 </head>
@@ -262,11 +245,17 @@
             <button class="filter-btn" data-category="氣運">氣運研究</button>
             <button class="filter-btn" data-category="歷史">歷史翻案</button>
             <button class="filter-btn" data-category="靈感">創作靈感</button>
-            <button class="filter-btn" data-category="教學">教學素材</button>
         </div>
 
         <div class="story-grid" id="story-grid">
             <!-- 故事內容由 JS 動態生成 -->
+        </div>
+    </div>
+
+    <div id="story-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <div class="modal-body" id="modal-body"></div>
         </div>
     </div>
 
@@ -329,15 +318,18 @@
             }
         ];
 
+        const modal = document.getElementById('story-modal');
+        const modalBody = document.getElementById('modal-body');
+
         function renderStories(filter = 'all') {
             const grid = document.getElementById('story-grid');
             grid.innerHTML = '';
-
             const filtered = filter === 'all' ? stories : stories.filter(s => s.category === filter);
 
             filtered.forEach(story => {
                 const card = document.createElement('div');
                 card.className = 'story-card';
+                card.onclick = () => openStory(story.id);
                 card.innerHTML = `
                     <div class="card-image">${story.icon}</div>
                     <div class="card-content">
@@ -347,17 +339,14 @@
                     </div>
                     <div class="card-footer">
                         <span>📅 ${story.date}</span>
-                        <a href="javascript:void(0)" class="btn-read" onclick="openStory(${story.id})">提取素材 ➔</a>
+                        <span class="btn-read">提取素材 ➔</span>
                     </div>
                 `;
                 grid.appendChild(card);
             });
         }
 
-        const modal = document.getElementById('story-modal');
-        const modalBody = document.getElementById('modal-body');
-
-        window.openStory = function(id) {
+        function openStory(id) {
             const story = stories.find(s => s.id === id);
             if (story) {
                 modalBody.innerHTML = story.content;
@@ -366,24 +355,23 @@
             }
         }
 
-        document.getElementById('close-modal').onclick = closeModal;
-        modal.onclick = function(e) { if(e.target === modal) closeModal(); }
-
         function closeModal() {
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
 
-        // 篩選邏輯
+        document.getElementById('close-modal').onclick = closeModal;
+        window.onclick = (e) => { if(e.target === modal) closeModal(); }
+
         document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.onclick = function() {
+            btn.onclick = (e) => {
+                e.stopPropagation();
                 document.querySelectorAll('.filter-btn').forEach(el => el.classList.remove('active'));
-                this.classList.add('active');
-                renderStories(this.dataset.category);
+                btn.classList.add('active');
+                renderStories(btn.dataset.category);
             };
         });
 
-        // 初始化
         renderStories();
     </script>
 </body>
