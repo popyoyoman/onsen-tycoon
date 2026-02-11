@@ -7,13 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f8f9fa;
+            --bg: #f0f2f5;
             --primary: #2c3e50;
             --accent: #d35400; 
             --secondary: #7f8c8d;
-            --card-bg: #ffffff;
-            --border: #e1e4e8;
-            --overlay: rgba(0,0,0,0.8);
+            --front-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --back-bg: #fff9f5;
         }
 
         * { box-sizing: border-box; }
@@ -32,203 +31,130 @@
         header {
             background: var(--primary);
             color: white;
-            padding: 60px 20px;
+            padding: 40px 20px;
             text-align: center;
         }
 
         header h1 {
             font-family: 'Noto Serif TC', serif;
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin: 0;
             letter-spacing: 2px;
         }
 
-        header p {
-            font-weight: 300;
-            opacity: 0.8;
-            margin-top: 10px;
-        }
-
         .container {
             max-width: 1200px;
-            margin: -40px auto 40px;
+            margin: 20px auto;
             padding: 0 20px;
             flex-grow: 1;
         }
 
+        /* 篩選列 */
         .filter-bar {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 40px;
+            gap: 10px;
+            margin-bottom: 30px;
             flex-wrap: wrap;
         }
 
         .filter-btn {
-            border: 1px solid var(--border);
-            background: none;
-            padding: 8px 20px;
-            border-radius: 25px;
+            border: 1px solid #ddd;
+            background: white;
+            padding: 6px 18px;
+            border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s;
-            color: var(--secondary);
-            font-weight: bold;
+            font-size: 0.9rem;
         }
 
-        .filter-btn.active, .filter-btn:hover {
+        .filter-btn.active {
             background: var(--accent);
             color: white;
             border-color: var(--accent);
         }
 
+        /* 故事網格 */
         .story-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 30px;
+            perspective: 1000px; /* 3D 透視 */
         }
 
-        .story-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
+        /* 翻牌容器 */
+        .card-container {
+            width: 100%;
+            height: 450px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 20px;
+        }
+
+        .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* 卡片正面與背面 */
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 30px;
             display: flex;
             flex-direction: column;
-            border: 1px solid var(--border);
-            cursor: pointer;
-        }
-
-        .story-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-        }
-
-        .card-image {
-            height: 180px;
-            background: #ecf0f1;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 60px;
-            border-bottom: 1px solid var(--border);
+            align-items: center;
         }
 
-        .card-content {
-            padding: 25px;
-            flex-grow: 1;
+        /* 正面樣式 (類比 SwiftUI 的 Color.blue.gradient) */
+        .card-front {
+            background: var(--front-gradient);
+            color: white;
         }
 
-        .card-tag {
-            display: inline-block;
-            background: #fdf2e9;
-            color: var(--accent);
-            font-size: 0.75rem;
-            padding: 4px 12px;
-            border-radius: 4px;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
+        .card-front .icon { font-size: 60px; margin-bottom: 20px; }
+        .card-front h2 { font-family: 'Noto Serif TC', serif; font-size: 1.8rem; margin: 0 0 10px 0; }
+        .card-front .quote { font-size: 1.1rem; opacity: 0.9; font-weight: 300; }
 
-        .card-title {
-            font-family: 'Noto Serif TC', serif;
-            font-size: 1.4rem;
-            margin: 0 0 15px 0;
+        /* 背面樣式 (類比 SwiftUI 的 Color.orange.opacity(0.2)) */
+        .card-back {
+            background-color: var(--back-bg);
             color: var(--primary);
-        }
-
-        .card-excerpt {
-            font-size: 0.95rem;
-            color: #5d6d7e;
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-
-        .card-footer {
-            padding: 15px 25px;
-            background: #f9f9f9;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-            color: #95a5a6;
-        }
-
-        .btn-read {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* Modal 樣式 */
-        #story-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: var(--overlay);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: white;
-            width: 100%;
-            max-width: 800px;
-            max-height: 85vh;
-            border-radius: 15px;
+            transform: rotateY(180deg);
+            text-align: left;
+            justify-content: flex-start;
             overflow-y: auto;
-            position: relative;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 2px solid #ffedd5;
         }
 
-        .close-modal {
-            position: absolute;
-            top: 20px; right: 25px;
-            font-size: 30px;
-            cursor: pointer;
-            color: var(--secondary);
-            line-height: 1;
-        }
-
-        .modal-body {
-            line-height: 1.8;
-            font-size: 1.1rem;
-            color: #34495e;
-        }
-
-        .modal-body h2 {
-            font-family: 'Noto Serif TC', serif;
-            color: var(--accent);
-            border-bottom: 2px solid #eee;
-            padding-bottom: 15px;
+        .card-back h3 { 
+            color: var(--accent); 
+            border-bottom: 2px solid #ffd8a8; 
+            padding-bottom: 5px; 
             margin-top: 0;
+            font-size: 1.2rem;
         }
 
-        .modal-body b { color: var(--primary); }
+        .story-section { margin-bottom: 15px; font-size: 0.95rem; line-height: 1.5; }
+        .story-section b { color: var(--accent); margin-right: 5px; }
 
-        footer {
-            text-align: center;
-            padding: 40px;
-            color: var(--secondary);
-            font-size: 0.9rem;
-        }
+        footer { text-align: center; padding: 40px; color: var(--secondary); font-size: 0.8rem; }
 
         @media (max-width: 600px) {
             .story-grid { grid-template-columns: 1fr; }
-            header h1 { font-size: 2rem; }
-            .modal-content { padding: 25px; }
+            .card-container { height: 500px; }
         }
     </style>
 </head>
@@ -236,90 +162,89 @@
 
     <header>
         <h1>🏦 故事銀行</h1>
-        <p>收藏人生經歷、網文靈感與歷史翻案的素材庫</p>
+        <p>點擊卡片以翻轉提取靈感</p>
     </header>
 
     <div class="container">
         <div class="filter-bar">
-            <button class="filter-btn active" data-category="all">全部素材</button>
+            <button class="filter-btn active" data-category="all">全部</button>
             <button class="filter-btn" data-category="氣運">氣運研究</button>
             <button class="filter-btn" data-category="歷史">歷史翻案</button>
             <button class="filter-btn" data-category="靈感">創作靈感</button>
         </div>
 
         <div class="story-grid" id="story-grid">
-            <!-- 故事內容由 JS 動態生成 -->
-        </div>
-    </div>
-
-    <div id="story-modal">
-        <div class="modal-content">
-            <span class="close-modal" id="close-modal">&times;</span>
-            <div class="modal-body" id="modal-body"></div>
+            <!-- 翻轉卡片由 JS 生成 -->
         </div>
     </div>
 
     <footer>
-        &copy; 2026 故事銀行 - 靈感提取隨時隨地
+        &copy; 2026 故事銀行 - 靈感隨時翻轉
     </footer>
 
     <script>
         const stories = [
             {
                 id: 1,
-                title: "開運羅盤的背後：奪運者的代價",
+                title: "開運羅盤的背後",
+                quote: "奪來的運氣，終將反噬其身",
                 category: "氣運",
                 icon: "🌀",
-                excerpt: "在大陸網文中，羅盤往往不僅是工具，更是人性的放大鏡。探討氣運交換中的平衡法則...",
-                date: "2026-02-11",
-                content: `
-                    <h2>《開運羅盤》：氣運與命運的翻案</h2>
-                    <p><b>🎯 目標：</b>女主立志考上頂尖名校，藉此擺脫重男輕女的壓抑家庭，翻轉命運。</p>
-                    <p><b>🚧 阻礙：</b>家人利用神祕的「開運羅盤」，將女主原本旺盛的氣運強行轉移給不學無術的弟弟。</p>
-                    <p><b>💪 努力：</b>表面維持隱忍順從，實則暗中觀察羅盤運作規律，並自學玄學博弈與能量守恆知識。</p>
-                    <p><b>📝 結果：</b>成功識破羅盤的「借運」限制，並在關鍵時刻切斷了自己與家人的氣運連結。</p>
-                    <p><b>🔄 意外轉彎：</b>弟弟因貪圖更多好運而過度祭祀羅盤，導致羅盤能量超載崩潰，原本奪來的運氣瞬間化為雙倍反噬。</p>
-                    <p><b>🎌 結局：</b>女主重獲氣運並如願升學，施咒的家人則陷入長期霉運，完成了一場大快人心的翻案。</p>
-                `
+                details: {
+                    goal: "女主立志考上名校翻轉命運。",
+                    obstacle: "家人利用羅盤強行將其氣運轉移給弟弟。",
+                    effort: "暗中觀察規律，自學玄學博弈知識。",
+                    result: "關鍵時刻切斷氣運連結，奪回主控權。",
+                    twist: "弟弟貪得無厭導致羅盤能量超載崩潰。",
+                    ending: "女主重獲氣運如願升學，完成翻案。"
+                }
             },
             {
                 id: 2,
-                title: "崇禎皇帝的最後一搏：國運的羅盤",
+                title: "崇禎皇帝的最後一搏",
+                quote: "勤政之下的悲劇性定格",
                 category: "歷史",
                 icon: "🏯",
-                excerpt: "如果明朝末年的國運羅盤偏轉一度，北京城是否能免於陷落？從氣候與經濟角度的重新審視。",
-                date: "2026-02-10",
-                content: `
-                    <h2>歷史翻案：崇禎皇帝的悲劇性定格</h2>
-                    <p><b>🎯 目標：</b>勤政的崇禎皇帝試圖在內憂外患中重振旗鼓，挽救大明江山。</p>
-                    <p><b>🚧 阻礙：</b>遭遇「小冰河時期」的氣候極端災難，導致全國性大饑荒與財政全面崩潰。</p>
-                    <p><b>💪 努力：</b>他宵衣旰食、裁撤冗員、多次自罪以求天助，並頻繁更換內閣圖強。</p>
-                    <p><b>📝 結果：</b>無論如何努力，都無法解決糧食與軍費的死結，最終李自成攻破北京。</p>
-                    <p><b>🔄 意外轉彎：</b>現代科學研究顯示，當時的氣候變遷是全球性的，並非任何行政手段所能逆轉。</p>
-                    <p><b>🎌 結局：</b>崇禎煤山自縊，後世對其評價從單純的「亡國之君」翻案為「在死局中奮鬥到最後一刻的悲劇人物」。</p>
-                `
+                details: {
+                    goal: "在內憂外患中挽救大明江山。",
+                    obstacle: "遭遇小冰河期極端氣候災難。",
+                    effort: "宵衣旰食、裁撤冗員、自罪求助。",
+                    result: "財政死結無法解開，李自成攻破北京。",
+                    twist: "科學研究顯示氣候變遷非人力可逆轉。",
+                    ending: "評價從「亡國之君」翻案為「悲劇英雄」。"
+                }
             },
             {
                 id: 3,
-                title: "2026 運氣科學：機率管理的真相",
+                title: "2026 運氣科學",
+                quote: "運氣是感知敏銳度的副產品",
                 category: "靈感",
                 icon: "🧭",
-                excerpt: "最新的學術期刊指出，運氣並非隨機，而是一種可以被管理的行為機率。",
-                date: "2026-02-11",
-                content: `
-                    <h2>2026 運氣科學：偶然性管理實驗</h2>
-                    <p><b>🎯 目標：</b>在現代生活中，透過科學方法主動增加個人的「幸運機率」。</p>
-                    <p><b>🚧 阻礙：</b>封閉的生活慣性與演算法推薦的「同溫層」，導致生活中隨機機緣極度貧乏。</p>
-                    <p><b>💪 努力：</b>實踐「偶然性管理 (Serendipity Management)」，主動建立弱連結並打破日常路徑。</p>
-                    <p><b>📝 結果：</b>發現個人遇到的潛在機會（Job Offer、新靈感）比平時提升了 40%。</p>
-                    <p><b>🔄 意外轉彎：</b>實驗意外發現，過度追求「最優解（演算法）」反而會抹殺運氣，因為運氣本質上來自於「錯誤」與「意外」。</p>
-                    <p><b>🎌 結局：</b>擁抱不確定性，建立了一套「主動創造機緣」的生活系統，實現了從「求運」到「創運」的轉變。</p>
-                `
+                details: {
+                    goal: "透過科學方法增加個人幸運機率。",
+                    obstacle: "演算法導致的隨機機緣貧乏。",
+                    effort: "實踐偶然性管理，建立弱連結互動。",
+                    result: "潛在機會與新靈感提升了 40%。",
+                    twist: "過度追求最優解反而會抹殺運氣。",
+                    ending: "建立了一套主動創造機緣的生活系統。"
+                }
+            },
+            {
+                id: 4,
+                title: "幸運的籃球隊長",
+                quote: "繞遠路才是捷徑",
+                category: "靈感",
+                icon: "🏀",
+                details: {
+                    goal: "在決賽中帶領球隊獲得勝利。",
+                    obstacle: "主將受傷且原本熟悉的進攻戰術失效。",
+                    effort: "放棄速成策略，改練最基礎的防守與傳球。",
+                    result: "看似進展緩慢，卻建立了強大的團隊默契。",
+                    twist: "最後一刻對手體力耗盡，基礎功成為關鍵。",
+                    ending: "體會到紮實的基本功才是最強的幸運符。"
+                }
             }
         ];
-
-        const modal = document.getElementById('story-modal');
-        const modalBody = document.getElementById('modal-body');
 
         function renderStories(filter = 'all') {
             const grid = document.getElementById('story-grid');
@@ -327,45 +252,36 @@
             const filtered = filter === 'all' ? stories : stories.filter(s => s.category === filter);
 
             filtered.forEach(story => {
-                const card = document.createElement('div');
-                card.className = 'story-card';
-                card.onclick = () => openStory(story.id);
-                card.innerHTML = `
-                    <div class="card-image">${story.icon}</div>
-                    <div class="card-content">
-                        <span class="card-tag">${story.category}</span>
-                        <h2 class="card-title">${story.title}</h2>
-                        <p class="card-excerpt">${story.excerpt}</p>
-                    </div>
-                    <div class="card-footer">
-                        <span>📅 ${story.date}</span>
-                        <span class="btn-read">提取素材 ➔</span>
+                const container = document.createElement('div');
+                container.className = 'card-container';
+                container.onclick = () => container.classList.toggle('flipped');
+                
+                container.innerHTML = `
+                    <div class="card-inner">
+                        <!-- 正面 -->
+                        <div class="card-front">
+                            <div class="icon">${story.icon}</div>
+                            <h2>${story.title}</h2>
+                            <div class="quote">「${story.quote}」</div>
+                        </div>
+                        <!-- 背面 -->
+                        <div class="card-back">
+                            <h3>📜 故事脈絡</h3>
+                            <div class="story-section"><b>🎯 目標：</b>${story.details.goal}</div>
+                            <div class="story-section"><b>🚧 阻礙：</b>${story.details.obstacle}</div>
+                            <div class="story-section"><b>💪 努力：</b>${story.details.effort}</div>
+                            <div class="story-section"><b>📝 結果：</b>${story.details.result}</div>
+                            <div class="story-section"><b>🔄 意外轉彎：</b>${story.details.twist}</div>
+                            <div class="story-section"><b>🎌 結局：</b>${story.details.ending}</div>
+                        </div>
                     </div>
                 `;
-                grid.appendChild(card);
+                grid.appendChild(container);
             });
         }
 
-        function openStory(id) {
-            const story = stories.find(s => s.id === id);
-            if (story) {
-                modalBody.innerHTML = story.content;
-                modal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        function closeModal() {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        document.getElementById('close-modal').onclick = closeModal;
-        window.onclick = (e) => { if(e.target === modal) closeModal(); }
-
         document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.onclick = (e) => {
-                e.stopPropagation();
+            btn.onclick = () => {
                 document.querySelectorAll('.filter-btn').forEach(el => el.classList.remove('active'));
                 btn.classList.add('active');
                 renderStories(btn.dataset.category);
