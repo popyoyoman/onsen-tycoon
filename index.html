@@ -136,7 +136,6 @@
         box-shadow: 0 8px 25px rgba(216, 27, 96, 0.3);
         transition: all 0.3s; margin-top: 30px;
     }
-    .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(216, 27, 96, 0.5); }
 
     #audio-control {
         position: fixed; bottom: 30px; right: 30px;
@@ -149,23 +148,22 @@
 
     .modal {
         display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.85); z-index: 2000;
+        background: rgba(0,0,0,0.8); z-index: 2000;
         justify-content: center; align-items: center;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(8px);
     }
     .ticket {
         background: white; width: 90%; max-width: 450px; padding: 40px;
         border-radius: 25px; text-align: center; border: 5px dashed var(--primary-pink);
         position: relative; animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    @keyframes popUp { from { transform: scale(0.5) rotate(-10deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
 
     @media (max-width: 600px) { 
-        .gallery { padding: 20px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } 
+        .gallery { padding: 20px; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } 
         .timeline::before { left: 20px; }
         .timeline-item { width: 100%; text-align: left !important; padding-left: 50px; }
         .timeline-dot { left: 12.5px !important; }
-        .message-box { padding: 40px 20px; margin: 20px; }
+        .message-box { padding: 30px 20px; margin: 20px; }
     }
 </style>
 </head>
@@ -175,10 +173,8 @@
 <div id="audio-control" onclick="toggleAudio()">⏳</div>
 
 <header>
-    <div style="font-size: 3rem; margin-bottom: 10px;">🌹</div>
     <h1>給最親愛的妳 ❤️</h1>
-    <p class="subtitle">HAPPY VALENTINE'S DAY 2026</p>
-    
+    <p class="subtitle">2026 VALENTINE'S DAY</p>
     <div class="love-timer-box">
         <p style="color:#888; margin:0; font-size:1rem;">老婆，我們已經攜手走過</p>
         <div id="counter" style="font-size: 1.8rem; font-weight: bold; color: var(--primary-pink); line-height:1.4; margin-top:5px;">...</div>
@@ -186,40 +182,23 @@
 </header>
 
 <div class="timeline">
-    <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">2021.08.05</div>
-        <div class="timeline-content">許下承諾，正式結為夫妻 💍</div>
-    </div>
-    <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">努力的回憶</div>
-        <div class="timeline-content">妳陪我考取老師，度過最難熬的夜晚 📚</div>
-    </div>
-    <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">最甜的驚喜</div>
-        <div class="timeline-content">雙胞胎寶貝出生，我們有了最溫馨的家 👶👶</div>
-    </div>
+    <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-date">2021.08.05</div><div class="timeline-content">正式成為夫妻 💍</div></div>
+    <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-date">努力的回憶</div><div class="timeline-content">妳陪我考取老師 📚</div></div>
+    <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-date">甜蜜的負擔</div><div class="timeline-content">雙胞胎寶貝出生 👶👶</div></div>
 </div>
 
 <div class="gallery" id="photoWall"></div>
 
 <div class="message-box">
     <div id="typewriter"></div>
-    <div id="gift-area" style="display:none; margin-top: 30px;">
-        <button class="btn" onclick="openGift()">🎁 領取老公為妳準備的小禮物</button>
-    </div>
+    <div id="gift-area" style="display:none;"><button class="btn" onclick="openGift()">🎁 領取老公的小心意</button></div>
 </div>
 
 <div id="giftModal" class="modal" onclick="closeGift()">
     <div class="ticket">
         <h2 style="color:var(--primary-pink);">🎟️ 專屬願望兌換券 x 3</h2>
         <p style="font-size:4rem; margin:20px 0;">🧞‍♂️</p>
-        <p style="font-size: 1.1rem; line-height: 1.8;">
-            憑此券可無限次向老公兌換：<br><br>
-            <strong>✨ 全身放鬆按摩 ✨<br>✨ 自由放風時光 ✨<br>✨ 老公全包家事 ✨</strong>
-        </p>
+        <p>憑此券可無限次兌換：<br><br><strong>✨ 全身放鬆按摩 ✨<br>✨ 自由放風時光 ✨<br>✨ 老公全包家事 ✨</strong></p>
         <p style="color:#d81b60; font-weight:bold; margin-top:30px;">「老婆妳辛苦了，我愛妳！」</p>
     </div>
 </div>
@@ -235,24 +214,17 @@
         player = new YT.Player('yt-player', {
             height: '0', width: '0', videoId: 'MmMvMF3ZC4o',
             playerVars: { 'autoplay': 0, 'loop': 1, 'playlist': 'MmMvMF3ZC4o' },
-            events: {
-                'onReady': () => { document.getElementById('audio-control').innerText = "🔇"; }
-            }
+            events: { 'onReady': () => { document.getElementById('audio-control').innerText = "🔇"; } }
         });
     }
 
     function toggleAudio() {
         const btn = document.getElementById('audio-control');
-        if (player.getPlayerState() === 1) {
-            player.pauseVideo();
-            btn.innerText = "🔇";
-        } else {
-            player.playVideo();
-            btn.innerText = "🔊";
-        }
+        if (player.getPlayerState() === 1) { player.pauseVideo(); btn.innerText = "🔇"; }
+        else if (player) { player.playVideo(); btn.innerText = "🔊"; }
     }
 
-    const allPhotos = ["2pic2_LINE_ALBUM__260209_1.jpg","2pic2_LINE_ALBUM__260209_10.jpg","2pic2_LINE_ALBUM__260209_100.jpg","2pic2_LINE_ALBUM__260209_101.jpg","2pic2_LINE_ALBUM__260209_102.jpg","2pic2_LINE_ALBUM__260209_103.jpg","2pic2_LINE_ALBUM__260209_104.jpg","2pic2_LINE_ALBUM__260209_105.jpg","2pic2_LINE_ALBUM__260209_106.jpg","2pic2_LINE_ALBUM__260209_107.jpg","2pic2_LINE_ALBUM__260209_108.jpg","2pic2_LINE_ALBUM__260209_109.jpg","2pic2_LINE_ALBUM__260209_11.jpg","2pic2_LINE_ALBUM__260209_110.jpg","2pic2_LINE_ALBUM__260209_111.jpg","2pic2_LINE_ALBUM__260209_112.jpg","2pic2_LINE_ALBUM__260209_113.jpg","2pic2_LINE_ALBUM__260209_114.jpg","2pic2_LINE_ALBUM__260209_115.jpg","2pic2_LINE_ALBUM__260209_116.jpg","2pic2_LINE_ALBUM__260209_117.jpg","2pic2_LINE_ALBUM__260209_118.jpg","2pic2_LINE_ALBUM__260209_119.jpg","2pic2_LINE_ALBUM__260209_12.jpg","2pic2_LINE_ALBUM__260209_120.jpg","2pic2_LINE_ALBUM__260209_121.jpg","2pic2_LINE_ALBUM__260209_122.jpg","2pic2_LINE_ALBUM__260209_123.jpg","2pic2_LINE_ALBUM__260209_124.jpg","2pic2_LINE_ALBUM__260209_125.jpg","2pic2_LINE_ALBUM__260209_126.jpg","2pic2_LINE_ALBUM__260209_127.jpg","2pic2_LINE_ALBUM__260209_128.jpg","2pic2_LINE_ALBUM__260209_129.jpg","2pic2_LINE_ALBUM__260209_13.jpg","2pic2_LINE_ALBUM__260209_130.jpg","2pic2_LINE_ALBUM__260209_131.jpg","2pic2_LINE_ALBUM__260209_132.jpg","2pic2_LINE_ALBUM__260209_133.jpg","2pic2_LINE_ALBUM__260209_134.jpg","2pic2_LINE_ALBUM__260209_135.jpg","2pic2_LINE_ALBUM__260209_136.jpg","2pic2_LINE_ALBUM__260209_137.jpg","2pic2_LINE_ALBUM__260209_138.jpg","2pic2_LINE_ALBUM__260209_139.jpg","2pic2_LINE_ALBUM__260209_14.jpg","2pic2_LINE_ALBUM__260209_140.jpg","2pic2_LINE_ALBUM__260209_141.jpg","2pic2_LINE_ALBUM__260209_142.jpg","2pic2_LINE_ALBUM__260209_143.jpg","2pic2_LINE_ALBUM__260209_144.jpg","2pic2_LINE_ALBUM__260209_145.jpg","2pic2_LINE_ALBUM__260209_146.jpg","2pic2_LINE_ALBUM__260209_147.jpg","2pic2_LINE_ALBUM__260209_148.jpg","2pic2_LINE_ALBUM__260209_149.jpg","2pic2_LINE_ALBUM__260209_15.jpg","2pic2_LINE_ALBUM__260209_150.jpg","2pic2_LINE_ALBUM__260209_151.jpg","2pic2_LINE_ALBUM__260209_16.jpg","2pic2_LINE_ALBUM__260209_17.jpg","2pic2_LINE_ALBUM__260209_18.jpg","2pic2_LINE_ALBUM__260209_19.jpg","2pic2_LINE_ALBUM__260209_2.jpg","2pic2_LINE_ALBUM__260209_20.jpg","2pic2_LINE_ALBUM__260209_21.jpg","2pic2_LINE_ALBUM__260209_22.jpg","2pic2_LINE_ALBUM__260209_23.jpg","2pic2_LINE_ALBUM__260209_24.jpg","2pic2_LINE_ALBUM__260209_25.jpg","2pic2_LINE_ALBUM__260209_26.jpg","2pic2_LINE_ALBUM__260209_27.jpg","2pic2_LINE_ALBUM__260209_28.jpg","2pic2_LINE_ALBUM__260209_29.jpg","2pic2_LINE_ALBUM__260209_3.jpg","2pic2_LINE_ALBUM__260209_30.jpg","2pic2_LINE_ALBUM__260209_31.jpg","2pic2_LINE_ALBUM__260209_32.jpg","2pic2_LINE_ALBUM__260209_33.jpg","2pic2_LINE_ALBUM__260209_34.jpg","2pic2_LINE_ALBUM__260209_35.jpg","2pic2_LINE_ALBUM__260209_36.jpg","2pic2_LINE_ALBUM__260209_37.jpg","2pic2_LINE_ALBUM__260209_38.jpg","2pic2_LINE_ALBUM__260209_39.jpg","2pic2_LINE_ALBUM__260209_4.jpg","2pic2_LINE_ALBUM__260209_40.jpg","2pic2_LINE_ALBUM__260209_41.jpg","2pic2_LINE_ALBUM__260209_42.jpg","2pic2_LINE_ALBUM__260209_43.jpg","2pic2_LINE_ALBUM__260209_44.jpg","2pic2_LINE_ALBUM__260209_45.jpg","2pic2_LINE_ALBUM__260209_46.jpg","2pic2_LINE_ALBUM__260209_47.jpg","2pic2_LINE_ALBUM__260209_48.jpg","2pic2_LINE_ALBUM__260209_49.jpg","2pic2_LINE_ALBUM__260209_5.jpg","2pic2_LINE_ALBUM__260209_50.jpg","2pic2_LINE_ALBUM__260209_51.jpg","2pic2_LINE_ALBUM__260209_52.jpg","2pic2_LINE_ALBUM__260209_53.jpg","2pic2_LINE_ALBUM__260209_54.jpg","2pic2_LINE_ALBUM__260209_55.jpg","2pic2_LINE_ALBUM__260209_56.jpg","2pic2_LINE_ALBUM__260209_57.jpg","2pic2_LINE_ALBUM__260209_58.jpg","2pic2_LINE_ALBUM__260209_59.jpg","2pic2_LINE_ALBUM__260209_6.jpg","2pic2_LINE_ALBUM__260209_60.jpg","2pic2_LINE_ALBUM__260209_61.jpg","2pic2_LINE_ALBUM__260209_62.jpg","2pic2_LINE_ALBUM__260209_63.jpg","2pic2_LINE_ALBUM__260209_64.jpg","2pic2_LINE_ALBUM__260209_65.jpg","2pic2_LINE_ALBUM__260209_66.jpg","2pic2_LINE_ALBUM__260209_67.jpg","2pic2_LINE_ALBUM__260209_68.jpg","2pic2_LINE_ALBUM__260209_69.jpg","2pic2_LINE_ALBUM__260209_7.jpg","2pic2_LINE_ALBUM__260209_70.jpg","2pic2_LINE_ALBUM__260209_71.jpg","2pic2_LINE_ALBUM__260209_72.jpg","2pic2_LINE_ALBUM__260209_73.jpg","2pic2_LINE_ALBUM__260209_74.jpg","2pic2_LINE_ALBUM__260209_75.jpg","2pic2_LINE_ALBUM__260209_76.jpg","2pic2_LINE_ALBUM__260209_77.jpg","2pic2_LINE_ALBUM__260209_78.jpg","2pic2_LINE_ALBUM__260209_79.jpg","2pic2_LINE_ALBUM__260209_8.jpg","2pic2_LINE_ALBUM__260209_80.jpg","2pic2_LINE_ALBUM__260209_81.jpg","2pic2_LINE_ALBUM__260209_82.jpg","2pic2_LINE_ALBUM__260209_83.jpg","2pic2_LINE_ALBUM__260209_84.jpg","2pic2_LINE_ALBUM__260209_85.jpg","2pic2_LINE_ALBUM__260209_86.jpg","2pic2_LINE_ALBUM__260209_87.jpg","2pic2_LINE_ALBUM__260209_88.jpg","2pic2_LINE_ALBUM__260209_89.jpg","2pic2_LINE_ALBUM__260209_9.jpg","2pic2_LINE_ALBUM__260209_90.jpg","2pic2_LINE_ALBUM__260209_91.jpg","2pic2_LINE_ALBUM__260209_92.jpg","2pic2_LINE_ALBUM__260209_93.jpg","2pic2_LINE_ALBUM__260209_94.jpg","2pic2_LINE_ALBUM__260209_95.jpg","2pic2_LINE_ALBUM__260209_96.jpg","2pic2_LINE_ALBUM__260209_97.jpg","2pic2_LINE_ALBUM__260209_98.jpg","2pic2_LINE_ALBUM__260209_99.jpg"];
+    const allPhotos = ["LINE_ALBUM_2025安安➕雙寶2026_260211_1.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_10.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_100.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_101.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_102.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_103.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_104.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_105.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_106.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_107.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_108.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_109.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_11.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_110.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_111.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_112.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_113.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_114.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_115.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_116.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_117.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_118.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_119.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_12.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_120.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_121.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_122.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_123.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_124.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_125.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_126.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_127.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_128.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_129.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_13.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_130.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_131.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_132.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_133.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_134.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_135.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_136.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_137.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_138.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_139.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_14.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_140.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_141.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_142.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_143.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_144.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_145.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_146.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_147.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_148.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_149.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_15.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_150.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_151.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_152.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_153.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_154.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_155.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_156.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_157.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_158.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_159.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_16.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_160.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_161.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_162.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_163.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_164.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_165.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_166.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_167.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_168.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_169.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_17.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_170.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_171.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_172.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_173.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_174.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_175.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_176.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_177.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_178.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_179.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_18.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_180.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_181.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_182.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_183.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_184.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_185.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_186.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_187.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_188.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_189.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_19.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_190.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_191.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_192.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_193.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_194.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_195.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_196.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_197.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_198.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_199.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_2.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_20.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_200.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_201.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_202.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_21.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_22.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_23.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_24.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_25.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_26.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_27.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_28.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_29.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_3.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_30.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_31.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_32.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_33.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_34.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_35.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_36.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_37.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_38.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_39.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_4.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_40.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_41.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_42.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_43.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_44.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_45.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_46.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_47.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_48.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_49.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_5.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_50.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_51.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_52.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_53.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_54.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_55.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_56.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_57.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_58.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_59.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_6.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_60.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_61.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_62.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_63.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_64.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_65.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_66.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_67.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_68.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_69.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_7.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_70.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_71.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_72.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_73.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_74.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_75.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_76.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_77.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_78.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_79.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_8.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_80.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_81.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_82.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_83.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_84.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_85.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_86.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_87.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_88.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_89.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_9.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_90.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_91.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_92.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_93.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_94.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_95.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_96.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_97.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_98.jpg", "LINE_ALBUM_2025安安➕雙寶2026_260211_99.jpg"];
 
     function loadRandomPhotos() {
         const wall = document.getElementById('photoWall');
