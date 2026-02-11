@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>故事銀行：靈感儲蓄所 - Story Vault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --primary: #2c3e50;
+            --accent: #d35400; /* 延續溫泉橘 */
+            --secondary: #7f8c8d;
+            --card-bg: #ffffff;
+            --border: #e1e4e8;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg);
+            color: var(--primary);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 3rem;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-weight: 300;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: -40px auto 40px;
+            padding: 0 20px;
+            flex-grow: 1;
+        }
+
+        /* 篩選列 */
+        .filter-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            border: 1px solid var(--border);
+            background: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* 故事網格 */
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .story-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+        }
+
+        .story-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+
+        .card-image {
+            height: 180px;
+            background: #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-content {
+            padding: 25px;
+            flex-grow: 1;
+        }
+
+        .card-tag {
+            display: inline-block;
+            background: #fdf2e9;
+            color: var(--accent);
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .card-title {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.4rem;
+            margin: 0 0 15px 0;
+            color: var(--primary);
+        }
+
+        .card-excerpt {
+            font-size: 0.95rem;
+            color: #5d6d7e;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .card-footer {
+            padding: 15px 25px;
+            background: #f9f9f9;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #95a5a6;
+        }
+
+        .btn-read {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-read:hover { text-decoration: underline; }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .story-grid { grid-template-columns: 1fr; }
+            header h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🏦 故事銀行</h1>
+        <p>收藏人生經歷、網文靈感與歷史翻案的素材庫</p>
+    </header>
+
+    <div class="container">
+        <div class="filter-bar">
+            <button class="filter-btn active" data-category="all">全部素材</button>
+            <button class="filter-btn" data-category="氣運">氣運研究</button>
+            <button class="filter-btn" data-category="歷史">歷史翻案</button>
+            <button class="filter-btn" data-category="靈感">創作靈感</button>
+            <button class="filter-btn" data-category="教學">教學素材</button>
+        </div>
+
+        <div class="story-grid" id="story-grid">
+            <!-- 故事內容由 JS 動態生成 -->
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 故事銀行 - 靈感提取隨時隨地
+    </footer>
+
+    <script>
+        const stories = [
+            {
+                id: 1,
+                title: "開運羅盤的背後：奪運者的代價",
+                category: "氣運",
+                icon: "🌀",
+                excerpt: "在大陸網文中，羅盤往往不僅是工具，更是人性的放大鏡。探討氣運交換中的平衡法則...",
+                date: "2026-02-11",
+                link: "#"
+            },
+            {
+                id: 2,
+                title: "被遺忘的歷史：崇禎皇帝的最後一搏",
+                category: "歷史",
+                icon: "🏯",
+                excerpt: "如果明朝末年的國運羅盤偏轉一度，北京城是否能免於陷落？從氣候與經濟角度的重新審視。",
+                date: "2026-02-10",
+                link: "#"
+            },
+            {
+                id: 3,
+                title: "水豚與溫泉的哲學：為何我們需要療癒？",
+                category: "靈感",
+                icon: "🐹",
+                excerpt: "從溫泉遊戲開發中得到的啟發：在快速節奏的網文中，留白與療癒感是如何抓住讀者的心。",
+                date: "2026-02-09",
+                link: "#"
+            },
+            {
+                id: 4,
+                title: "教學現場：如何利用羅盤概念解釋機率？",
+                category: "教學",
+                icon: "🧭",
+                excerpt: "將玄學中的開運邏輯轉化為統計學中的機率管理，這是一場跨學科的教學嘗試。",
+                date: "2026-02-08",
+                link: "#"
+            },
+            {
+                id: 5,
+                title: "張宏傑筆下的真實乾隆：翻案與還原",
+                category: "歷史",
+                icon: "📜",
+                excerpt: "深度解析大陸歷史作家張宏傑如何透過史料，還原一個與電視劇完全不同的乾隆盛世。",
+                date: "2026-02-07",
+                link: "#"
+            }
+        ];
+
+        function renderStories(filter = 'all') {
+            const grid = document.getElementById('story-grid');
+            grid.innerHTML = '';
+
+            const filtered = filter === 'all' ? stories : stories.filter(s => s.category === filter);
+
+            filtered.forEach(story => {
+                const card = document.createElement('div');
+                card.className = 'story-card';
+                card.innerHTML = `
+                    <div class="card-image">${story.icon}</div>
+                    <div class="card-content">
+                        <span class="card-tag">${story.category}</span>
+                        <h2 class="card-title">${story.title}</h2>
+                        <p class="card-excerpt">${story.excerpt}</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>📅 ${story.date}</span>
+                        <a href="${story.link}" class="btn-read">提取素材 ➔</a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 篩選邏輯
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.onclick = function() {
+                document.querySelectorAll('.filter-btn').forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+                renderStories(this.dataset.category);
+            };
+        });
+
+        // 初始化
+        renderStories();
+    </script>
+</body>
+</html>
