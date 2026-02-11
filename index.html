@@ -1,588 +1,317 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>極上溫泉物語：終極渡假村 - Onsen Tycoon Ultimate</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #d35400;
-            --secondary: #e67e22;
-            --accent: #27ae60;
-            --bg: #fdf2e9;
-            --panel: #ffffff;
-            --text: #2c3e50;
-            --wood: #8b4513;
-            --gold: #f1c40f;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>給最親愛的老婆 ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700&family=Noto+Sans+TC:wght@400;500&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary-pink: #d81b60;
+        --soft-pink: #f8bbd0;
+        --bg-gradient: linear-gradient(135deg, #fff5f5 0%, #fff0f5 100%);
+    }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    * { box-sizing: border-box; }
 
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: var(--bg);
-            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
-            color: var(--text);
-            margin: 0;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-            touch-action: manipulation;
-        }
+    body {
+        margin: 0; padding: 0;
+        background: var(--bg-gradient);
+        font-family: 'Noto Sans TC', sans-serif;
+        color: #444;
+        overflow-x: hidden;
+    }
+    
+    .heart {
+        position: fixed; top: -1vh; font-size: 1.5rem; color: #ff4081; opacity: 0.6; z-index: 999;
+        animation: fall linear infinite;
+    }
+    @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
-        #game-layout { display: flex; width: 100%; height: 100%; }
+    header {
+        text-align: center; padding: 80px 20px;
+        background: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    h1 { font-family: 'Noto Serif TC', serif; font-size: clamp(2rem, 8vw, 3.5rem); color: var(--primary-pink); margin-bottom: 10px; }
+    p.subtitle { font-size: 1.2rem; color: #888; letter-spacing: 2px; }
 
-        #resort-view {
-            flex-grow: 1;
-            position: relative;
-            background: #aed6f1;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: background 10s ease;
-        }
+    .love-timer-box {
+        text-align:center; margin-top: 20px; 
+        background: rgba(216, 27, 96, 0.05); 
+        padding: 20px; border-radius: 20px; 
+        display: inline-block; border: 1px solid var(--soft-pink);
+    }
 
-        /* 遠山背景 */
-        #mountains {
-            position: absolute;
-            bottom: 30%;
-            width: 100%;
-            height: 300px;
-            z-index: 1;
-            opacity: 0.8;
-            pointer-events: none;
-        }
-        .mtn {
-            position: absolute;
-            bottom: 0;
-            background: #7fb3d5;
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-            transition: background 10s ease;
-        }
+    .timeline {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        position: relative;
+    }
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        width: 2px;
+        height: 100%;
+        background: var(--soft-pink);
+        transform: translateX(-50%);
+    }
+    .timeline-item {
+        margin-bottom: 30px;
+        position: relative;
+        width: 50%;
+        padding: 10px 30px;
+    }
+    .timeline-item:nth-child(odd) { left: 0; text-align: right; }
+    .timeline-item:nth-child(even) { left: 50%; text-align: left; }
+    .timeline-dot {
+        position: absolute;
+        top: 15px;
+        width: 15px;
+        height: 15px;
+        background: var(--primary-pink);
+        border-radius: 50%;
+        z-index: 10;
+    }
+    .timeline-item:nth-child(odd) .timeline-dot { right: -7.5px; }
+    .timeline-item:nth-child(even) .timeline-dot { left: -7.5px; }
+    .timeline-date { font-weight: bold; color: var(--primary-pink); margin-bottom: 5px; }
+    .timeline-content { font-size: 1rem; color: #666; }
 
-        /* 木質地板 (緣側) */
-        #deck {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 35%;
-            background: #8b4513;
-            background-image: 
-                linear-gradient(90deg, transparent 95%, rgba(0,0,0,0.2) 100%),
-                repeating-linear-gradient(0deg, #8b4513 0px, #8b4513 40px, #a0522d 41px);
-            z-index: 5;
-            box-shadow: inset 0 10px 20px rgba(0,0,0,0.3);
-        }
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 30px;
+        padding: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .polaroid {
+        background: white;
+        padding: 15px 15px 40px 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        border-radius: 2px;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+    }
+    .polaroid img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border: 1px solid #f0f0f0;
+    }
+    .polaroid:hover {
+        transform: scale(1.1) rotate(0deg) !important;
+        z-index: 100;
+    }
+    .polaroid::after {
+        content: 'Our Memories';
+        font-family: 'Zhi Mang Xing', cursive;
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+        font-size: 1.2rem;
+        color: #777;
+    }
 
-        /* 環境圖層 */
-        #env-layer { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
-        .cloud { position: absolute; font-size: 60px; opacity: 0.5; animation: drift linear infinite; }
-        .star { position: absolute; font-size: 15px; color: gold; opacity: 0; animation: twinkle 3s infinite; }
-        .bird { position: absolute; font-size: 20px; animation: bird-fly linear infinite; }
-        .tree-static { position: absolute; font-size: 50px; bottom: 15%; filter: brightness(0.8); z-index: 1; }
+    .message-box {
+        text-align: center; padding: 60px 40px; background: white;
+        margin: 60px auto; max-width: 700px; border-radius: 30px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+        position: relative;
+        min-height: 400px;
+    }
+    #typewriter {
+        font-size: 1.2rem; line-height: 2.2; text-align: left;
+        white-space: pre-wrap;
+        display: inline-block;
+        font-family: 'Noto Serif TC', serif;
+    }
 
-        @keyframes drift {
-            from { transform: translateX(-100px); }
-            to { transform: translateX(100vw); }
-        }
+    .btn {
+        background: var(--primary-pink); color: white; border: none; padding: 18px 50px;
+        font-size: 1.2rem; border-radius: 50px; cursor: pointer;
+        box-shadow: 0 8px 25px rgba(216, 27, 96, 0.3);
+        transition: all 0.3s; margin-top: 30px;
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(216, 27, 96, 0.5); }
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 0.8; }
-        }
+    #audio-control {
+        position: fixed; bottom: 30px; right: 30px;
+        background: white; width: 65px; height: 65px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        cursor: pointer; z-index: 1000; font-size: 2.2rem;
+        border: 3px solid var(--soft-pink);
+    }
 
-        @keyframes bird-fly {
-            from { transform: translate(-50px, 0) scaleX(1); }
-            to { transform: translate(100vw, -50px) scaleX(1); }
-        }
+    .modal {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.85); z-index: 2000;
+        justify-content: center; align-items: center;
+        backdrop-filter: blur(10px);
+    }
+    .ticket {
+        background: white; width: 90%; max-width: 450px; padding: 40px;
+        border-radius: 25px; text-align: center; border: 5px dashed var(--primary-pink);
+        position: relative; animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popUp { from { transform: scale(0.5) rotate(-10deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
 
-        #skyline { position: absolute; top: 20px; font-size: 100px; opacity: 0.3; user-select: none; z-index: 2; }
-
-        .main-onsen {
-            font-size: clamp(100px, 20vw, 180px);
-            cursor: pointer;
-            transition: all 0.1s;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
-            user-select: none;
-            animation: float-slow 3s ease-in-out infinite;
-        }
-
-        .main-onsen:active { animation: shake 0.2s infinite; transform: scale(0.95); }
-
-        @keyframes float-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes shake { 0%, 100% { transform: translate(1px, 1px); } 20% { transform: translate(-3px, 0); } 50% { transform: translate(-1px, 2px); } }
-
-        #decorations { position: absolute; width: 100%; height: 100%; pointer-events: none; }
-        .decor { position: absolute; font-size: 40px; animation: bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), bob 2s ease-in-out infinite; }
-        @keyframes bob { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
-
-        .steam-particle { position: absolute; color: white; opacity: 0.6; font-size: 24px; pointer-events: none; animation: steam-rise 3s linear forwards; }
-        @keyframes steam-rise { 0% { transform: translateY(0) scale(1); opacity: 0.6; } 100% { transform: translateY(-200px) scale(2); opacity: 0; } }
-
-        #top-bar { position: absolute; top: 20px; left: 20px; right: 20px; display: flex; justify-content: space-between; z-index: 100; gap: 10px; flex-wrap: wrap; }
-        .stat-card { background: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; border: 2px solid var(--wood); min-height: 50px; }
-        .stat-val { font-size: 1.4rem; font-weight: bold; color: var(--primary); margin-left: 8px; }
-
-        #side-panel { width: 400px; background: var(--panel); border-left: 4px solid var(--wood); display: flex; flex-direction: column; box-shadow: -10px 0 20px rgba(0,0,0,0.1); }
-        .tabs { display: flex; background: var(--wood); }
-        .tab { flex: 1; padding: 15px; text-align: center; color: white; cursor: pointer; font-weight: bold; transition: background 0.3s; }
-        .tab.active { background: var(--primary); }
-
-        .panel-content { flex-grow: 1; overflow-y: auto; padding: 20px; display: none; }
-        .panel-content.active { display: block; }
-
-        .shop-item { background: #fff; border: 2px solid #eee; border-radius: 15px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; position: relative; overflow: hidden; }
-        .shop-item:hover:not(.locked) { border-color: var(--secondary); background: #fff9f5; transform: translateY(-3px); }
-        .shop-item.locked { opacity: 0.6; filter: grayscale(1); cursor: not-allowed; }
-        .item-icon { font-size: 40px; margin-right: 15px; width: 60px; text-align: center; }
-        .item-details { flex-grow: 1; }
-        .item-name { font-weight: bold; font-size: 1.1rem; }
-        .item-desc { font-size: 0.85rem; color: #7f8c8d; display: block; }
-        .item-stats { margin-top: 5px; font-size: 0.9rem; color: var(--accent); font-weight: bold; }
-        .item-cost-tag { background: var(--bg); padding: 5px 12px; border-radius: 20px; font-weight: bold; color: var(--primary); }
-        .item-count { position: absolute; top: 0; right: 0; background: var(--wood); color: white; padding: 2px 10px; border-bottom-left-radius: 10px; font-size: 0.8rem; }
-
-        .click-pop { position: absolute; pointer-events: none; font-weight: bold; color: var(--primary); font-size: 24px; z-index: 1000; text-shadow: 1px 1px 2px white; }
-
-        #controls { position: absolute; bottom: 20px; left: 20px; display: flex; gap: 10px; }
-        .icon-btn { background: white; border: 2px solid var(--wood); border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; }
-
-        /* 隨機事件：黃金水豚 */
-        #golden-capy { position: absolute; font-size: 60px; cursor: pointer; z-index: 1000; filter: drop-shadow(0 0 10px gold); display: none; }
-
-        /* 轉生面板 */
-        #prestige-btn { background: var(--gold); border: 2px solid var(--wood); padding: 5px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; display: none; margin-left: 10px; }
-
-        @media (max-width: 900px) {
-            #game-layout { flex-direction: column; }
-            #side-panel { width: 100%; height: 50%; border-left: none; border-top: 4px solid var(--wood); }
-            #top-bar { top: 10px; left: 10px; }
-            .stat-card { padding: 5px 15px; min-height: 40px; }
-            .stat-val { font-size: 1rem; }
-        }
-    </style>
+    @media (max-width: 600px) { 
+        .gallery { padding: 20px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } 
+        .timeline::before { left: 20px; }
+        .timeline-item { width: 100%; text-align: left !important; padding-left: 50px; }
+        .timeline-dot { left: 12.5px !important; }
+        .message-box { padding: 40px 20px; margin: 20px; }
+    }
+</style>
 </head>
 <body>
 
-    <div id="game-layout">
-        <div id="resort-view">
-            <div id="mountains"></div>
-            <div id="env-layer"></div>
-            <div id="skyline">🗻</div>
-            <div id="deck"></div>
-            
-            <div id="top-bar">
-                <div class="stat-card">💰 <span class="stat-val" id="money">0</span></div>
-                <div class="stat-card">⭐ <span class="stat-val" id="level">1</span>
-                    <button id="prestige-btn">轉生已就緒！</button>
-                </div>
-                <div class="stat-card">🕒 <span class="stat-val" id="mps" style="color: var(--accent);">0</span> <small>/s</small></div>
-            </div>
+<div id="yt-player" style="position: absolute; top: -9999px; left: -9999px;"></div>
+<div id="audio-control" onclick="toggleAudio()">⏳</div>
 
-            <div id="golden-capy" class="animate__animated">🐹</div>
-
-            <div id="decorations"></div>
-            <div id="pool-area" style="margin-top: auto; margin-bottom: 50px;"><div class="main-onsen" id="clicker">♨️</div></div>
-
-            <div id="controls">
-                <div class="icon-btn" id="mute-btn">🔊</div>
-                <div class="icon-btn" id="reset-btn">🔄</div>
-            </div>
-        </div>
-
-        <div id="side-panel">
-            <div class="tabs">
-                <div class="tab active" data-tab="shop">建設商店</div>
-                <div class="tab" data-tab="upgrades">技術研發</div>
-            </div>
-            
-            <div class="panel-content active" id="shop-content"></div>
-            <div class="panel-content" id="upgrades-content"></div>
-        </div>
+<header>
+    <div style="font-size: 3rem; margin-bottom: 10px;">🌹</div>
+    <h1>給最親愛的妳 ❤️</h1>
+    <p class="subtitle">HAPPY VALENTINE'S DAY 2026</p>
+    
+    <div class="love-timer-box">
+        <p style="color:#888; margin:0; font-size:1rem;">老婆，我們已經攜手走過</p>
+        <div id="counter" style="font-size: 1.8rem; font-weight: bold; color: var(--primary-pink); line-height:1.4; margin-top:5px;">...</div>
     </div>
+</header>
 
-    <script>
-        // 音效系統
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let muted = false;
-        function playSound(freq, type, duration, vol = 0.1) {
-            if (muted) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-            osc.start(); osc.stop(audioCtx.currentTime + duration);
-        }
+<div class="timeline">
+    <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2021.08.05</div>
+        <div class="timeline-content">許下承諾，正式結為夫妻 💍</div>
+    </div>
+    <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">努力的回憶</div>
+        <div class="timeline-content">妳陪我考取老師，度過最難熬的夜晚 📚</div>
+    </div>
+    <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">最甜的驚喜</div>
+        <div class="timeline-content">雙胞胎寶貝出生，我們有了最溫馨的家 👶👶</div>
+    </div>
+</div>
 
-        const sounds = {
-            click: () => playSound(440, 'sine', 0.1),
-            buy: () => playSound(880, 'square', 0.2),
-            event: () => { playSound(600, 'triangle', 0.3); setTimeout(() => playSound(900, 'triangle', 0.3), 100); },
-            levelUp: () => { [523, 659, 783].forEach((f, i) => setTimeout(() => playSound(f, 'sine', 0.2), i * 100)); }
-        };
+<div class="gallery" id="photoWall"></div>
 
-        // 數據模型
-        const DEFAULT_GAME = {
-            money: 0, totalMoney: 0, level: 1, mps: 0, clickPower: 1, prestigeMult: 1,
-            lastSave: Date.now(),
-            items: {
-                capybara: { name: "水豚家族", icon: "🐹", baseCost: 15, mps: 1, count: 0, desc: "可愛就是正義。" },
-                waiter: { name: "專業招待", icon: "👨‍💼", baseCost: 100, mps: 5, count: 0, desc: "提供頂級服務。" },
-                herbal: { name: "藥草浴池", icon: "🌿", baseCost: 500, mps: 18, count: 0, desc: "舒緩身心。" },
-                outdoor: { name: "雪景風呂", icon: "❄️", baseCost: 2000, mps: 70, count: 0, desc: "極致體驗。" },
-                hotel: { name: "雲海渡假村", icon: "🏰", baseCost: 10000, mps: 400, count: 0, desc: "頂級套房。" }
-            },
-            upgrades: {
-                strong_tap: { name: "強力噴頭", cost: 100, owned: false, desc: "點擊威力 +100%", effect: () => { game.clickPower *= 2; } },
-                auto_clean: { name: "自動洗地機", cost: 500, owned: false, desc: "所有建築產量 +20%", effect: () => { Object.values(game.items).forEach(i => i.mps *= 1.2); recalcMps(); } },
-                ads: { name: "臉書廣告", cost: 2000, owned: false, desc: "所有建築產量 +50%", effect: () => { Object.values(game.items).forEach(i => i.mps *= 1.5); recalcMps(); } }
+<div class="message-box">
+    <div id="typewriter"></div>
+    <div id="gift-area" style="display:none; margin-top: 30px;">
+        <button class="btn" onclick="openGift()">🎁 領取老公為妳準備的小禮物</button>
+    </div>
+</div>
+
+<div id="giftModal" class="modal" onclick="closeGift()">
+    <div class="ticket">
+        <h2 style="color:var(--primary-pink);">🎟️ 專屬願望兌換券 x 3</h2>
+        <p style="font-size:4rem; margin:20px 0;">🧞‍♂️</p>
+        <p style="font-size: 1.1rem; line-height: 1.8;">
+            憑此券可無限次向老公兌換：<br><br>
+            <strong>✨ 全身放鬆按摩 ✨<br>✨ 自由放風時光 ✨<br>✨ 老公全包家事 ✨</strong>
+        </p>
+        <p style="color:#d81b60; font-weight:bold; margin-top:30px;">「老婆妳辛苦了，我愛妳！」</p>
+    </div>
+</div>
+
+<script>
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('yt-player', {
+            height: '0', width: '0', videoId: 'MmMvMF3ZC4o',
+            playerVars: { 'autoplay': 0, 'loop': 1, 'playlist': 'MmMvMF3ZC4o' },
+            events: {
+                'onReady': () => { document.getElementById('audio-control').innerText = "🔇"; }
             }
-        };
+        });
+    }
 
-        let game = JSON.parse(localStorage.getItem('onsen_save_v2')) || JSON.parse(JSON.stringify(DEFAULT_GAME));
-        let eventActive = false;
-
-        function saveGame() { game.lastSave = Date.now(); localStorage.setItem('onsen_save_v2', JSON.stringify(game)); }
-        
-        function recalcMps() {
-            game.mps = Object.values(game.items).reduce((acc, i) => acc + (i.mps * i.count), 0) * game.prestigeMult;
+    function toggleAudio() {
+        const btn = document.getElementById('audio-control');
+        if (player.getPlayerState() === 1) {
+            player.pauseVideo();
+            btn.innerText = "🔇";
+        } else {
+            player.playVideo();
+            btn.innerText = "🔊";
         }
+    }
 
-        // 環境系統
-        function initEnvironment() {
-            const layer = document.getElementById('env-layer');
-            const mtnContainer = document.getElementById('mountains');
-            
-            // 產生遠山
-            for(let i=0; i<5; i++) {
-                const mtn = document.createElement('div');
-                mtn.className = 'mtn';
-                mtn.style.width = (40 + Math.random() * 40) + '%';
-                mtn.style.height = (60 + Math.random() * 40) + '%';
-                mtn.style.left = (i * 20 - 10 + Math.random() * 10) + '%';
-                mtn.style.opacity = 0.5 + (i * 0.1);
-                mtnContainer.appendChild(mtn);
-            }
+    const allPhotos = ["2pic2_LINE_ALBUM__260209_1.jpg","2pic2_LINE_ALBUM__260209_10.jpg","2pic2_LINE_ALBUM__260209_100.jpg","2pic2_LINE_ALBUM__260209_101.jpg","2pic2_LINE_ALBUM__260209_102.jpg","2pic2_LINE_ALBUM__260209_103.jpg","2pic2_LINE_ALBUM__260209_104.jpg","2pic2_LINE_ALBUM__260209_105.jpg","2pic2_LINE_ALBUM__260209_106.jpg","2pic2_LINE_ALBUM__260209_107.jpg","2pic2_LINE_ALBUM__260209_108.jpg","2pic2_LINE_ALBUM__260209_109.jpg","2pic2_LINE_ALBUM__260209_11.jpg","2pic2_LINE_ALBUM__260209_110.jpg","2pic2_LINE_ALBUM__260209_111.jpg","2pic2_LINE_ALBUM__260209_112.jpg","2pic2_LINE_ALBUM__260209_113.jpg","2pic2_LINE_ALBUM__260209_114.jpg","2pic2_LINE_ALBUM__260209_115.jpg","2pic2_LINE_ALBUM__260209_116.jpg","2pic2_LINE_ALBUM__260209_117.jpg","2pic2_LINE_ALBUM__260209_118.jpg","2pic2_LINE_ALBUM__260209_119.jpg","2pic2_LINE_ALBUM__260209_12.jpg","2pic2_LINE_ALBUM__260209_120.jpg","2pic2_LINE_ALBUM__260209_121.jpg","2pic2_LINE_ALBUM__260209_122.jpg","2pic2_LINE_ALBUM__260209_123.jpg","2pic2_LINE_ALBUM__260209_124.jpg","2pic2_LINE_ALBUM__260209_125.jpg","2pic2_LINE_ALBUM__260209_126.jpg","2pic2_LINE_ALBUM__260209_127.jpg","2pic2_LINE_ALBUM__260209_128.jpg","2pic2_LINE_ALBUM__260209_129.jpg","2pic2_LINE_ALBUM__260209_13.jpg","2pic2_LINE_ALBUM__260209_130.jpg","2pic2_LINE_ALBUM__260209_131.jpg","2pic2_LINE_ALBUM__260209_132.jpg","2pic2_LINE_ALBUM__260209_133.jpg","2pic2_LINE_ALBUM__260209_134.jpg","2pic2_LINE_ALBUM__260209_135.jpg","2pic2_LINE_ALBUM__260209_136.jpg","2pic2_LINE_ALBUM__260209_137.jpg","2pic2_LINE_ALBUM__260209_138.jpg","2pic2_LINE_ALBUM__260209_139.jpg","2pic2_LINE_ALBUM__260209_14.jpg","2pic2_LINE_ALBUM__260209_140.jpg","2pic2_LINE_ALBUM__260209_141.jpg","2pic2_LINE_ALBUM__260209_142.jpg","2pic2_LINE_ALBUM__260209_143.jpg","2pic2_LINE_ALBUM__260209_144.jpg","2pic2_LINE_ALBUM__260209_145.jpg","2pic2_LINE_ALBUM__260209_146.jpg","2pic2_LINE_ALBUM__260209_147.jpg","2pic2_LINE_ALBUM__260209_148.jpg","2pic2_LINE_ALBUM__260209_149.jpg","2pic2_LINE_ALBUM__260209_15.jpg","2pic2_LINE_ALBUM__260209_150.jpg","2pic2_LINE_ALBUM__260209_151.jpg","2pic2_LINE_ALBUM__260209_16.jpg","2pic2_LINE_ALBUM__260209_17.jpg","2pic2_LINE_ALBUM__260209_18.jpg","2pic2_LINE_ALBUM__260209_19.jpg","2pic2_LINE_ALBUM__260209_2.jpg","2pic2_LINE_ALBUM__260209_20.jpg","2pic2_LINE_ALBUM__260209_21.jpg","2pic2_LINE_ALBUM__260209_22.jpg","2pic2_LINE_ALBUM__260209_23.jpg","2pic2_LINE_ALBUM__260209_24.jpg","2pic2_LINE_ALBUM__260209_25.jpg","2pic2_LINE_ALBUM__260209_26.jpg","2pic2_LINE_ALBUM__260209_27.jpg","2pic2_LINE_ALBUM__260209_28.jpg","2pic2_LINE_ALBUM__260209_29.jpg","2pic2_LINE_ALBUM__260209_3.jpg","2pic2_LINE_ALBUM__260209_30.jpg","2pic2_LINE_ALBUM__260209_31.jpg","2pic2_LINE_ALBUM__260209_32.jpg","2pic2_LINE_ALBUM__260209_33.jpg","2pic2_LINE_ALBUM__260209_34.jpg","2pic2_LINE_ALBUM__260209_35.jpg","2pic2_LINE_ALBUM__260209_36.jpg","2pic2_LINE_ALBUM__260209_37.jpg","2pic2_LINE_ALBUM__260209_38.jpg","2pic2_LINE_ALBUM__260209_39.jpg","2pic2_LINE_ALBUM__260209_4.jpg","2pic2_LINE_ALBUM__260209_40.jpg","2pic2_LINE_ALBUM__260209_41.jpg","2pic2_LINE_ALBUM__260209_42.jpg","2pic2_LINE_ALBUM__260209_43.jpg","2pic2_LINE_ALBUM__260209_44.jpg","2pic2_LINE_ALBUM__260209_45.jpg","2pic2_LINE_ALBUM__260209_46.jpg","2pic2_LINE_ALBUM__260209_47.jpg","2pic2_LINE_ALBUM__260209_48.jpg","2pic2_LINE_ALBUM__260209_49.jpg","2pic2_LINE_ALBUM__260209_5.jpg","2pic2_LINE_ALBUM__260209_50.jpg","2pic2_LINE_ALBUM__260209_51.jpg","2pic2_LINE_ALBUM__260209_52.jpg","2pic2_LINE_ALBUM__260209_53.jpg","2pic2_LINE_ALBUM__260209_54.jpg","2pic2_LINE_ALBUM__260209_55.jpg","2pic2_LINE_ALBUM__260209_56.jpg","2pic2_LINE_ALBUM__260209_57.jpg","2pic2_LINE_ALBUM__260209_58.jpg","2pic2_LINE_ALBUM__260209_59.jpg","2pic2_LINE_ALBUM__260209_6.jpg","2pic2_LINE_ALBUM__260209_60.jpg","2pic2_LINE_ALBUM__260209_61.jpg","2pic2_LINE_ALBUM__260209_62.jpg","2pic2_LINE_ALBUM__260209_63.jpg","2pic2_LINE_ALBUM__260209_64.jpg","2pic2_LINE_ALBUM__260209_65.jpg","2pic2_LINE_ALBUM__260209_66.jpg","2pic2_LINE_ALBUM__260209_67.jpg","2pic2_LINE_ALBUM__260209_68.jpg","2pic2_LINE_ALBUM__260209_69.jpg","2pic2_LINE_ALBUM__260209_7.jpg","2pic2_LINE_ALBUM__260209_70.jpg","2pic2_LINE_ALBUM__260209_71.jpg","2pic2_LINE_ALBUM__260209_72.jpg","2pic2_LINE_ALBUM__260209_73.jpg","2pic2_LINE_ALBUM__260209_74.jpg","2pic2_LINE_ALBUM__260209_75.jpg","2pic2_LINE_ALBUM__260209_76.jpg","2pic2_LINE_ALBUM__260209_77.jpg","2pic2_LINE_ALBUM__260209_78.jpg","2pic2_LINE_ALBUM__260209_79.jpg","2pic2_LINE_ALBUM__260209_8.jpg","2pic2_LINE_ALBUM__260209_80.jpg","2pic2_LINE_ALBUM__260209_81.jpg","2pic2_LINE_ALBUM__260209_82.jpg","2pic2_LINE_ALBUM__260209_83.jpg","2pic2_LINE_ALBUM__260209_84.jpg","2pic2_LINE_ALBUM__260209_85.jpg","2pic2_LINE_ALBUM__260209_86.jpg","2pic2_LINE_ALBUM__260209_87.jpg","2pic2_LINE_ALBUM__260209_88.jpg","2pic2_LINE_ALBUM__260209_89.jpg","2pic2_LINE_ALBUM__260209_9.jpg","2pic2_LINE_ALBUM__260209_90.jpg","2pic2_LINE_ALBUM__260209_91.jpg","2pic2_LINE_ALBUM__260209_92.jpg","2pic2_LINE_ALBUM__260209_93.jpg","2pic2_LINE_ALBUM__260209_94.jpg","2pic2_LINE_ALBUM__260209_95.jpg","2pic2_LINE_ALBUM__260209_96.jpg","2pic2_LINE_ALBUM__260209_97.jpg","2pic2_LINE_ALBUM__260209_98.jpg","2pic2_LINE_ALBUM__260209_99.jpg"];
 
-            // 放置靜態樹木 (改到 Deck 上或邊緣)
-            for (let i = 0; i < 15; i++) {
-                const tree = document.createElement('div');
-                tree.className = 'tree-static';
-                tree.innerText = Math.random() > 0.5 ? '🌲' : '🌳';
-                tree.style.left = (Math.random() * 100) + '%';
-                tree.style.fontSize = (40 + Math.random() * 40) + 'px';
-                tree.style.bottom = (30 + Math.random() * 10) + '%';
-                tree.style.zIndex = Math.random() > 0.5 ? '4' : '6';
-                layer.appendChild(tree);
-            }
+    function loadRandomPhotos() {
+        const wall = document.getElementById('photoWall');
+        wall.innerHTML = '';
+        const shuffled = [...allPhotos].sort(() => 0.5 - Math.random());
+        shuffled.slice(0, 24).forEach(src => {
+            const container = document.createElement('div');
+            container.className = 'polaroid';
+            const rotate = (Math.random() * 12 - 6).toFixed(2);
+            container.style.transform = `rotate(${rotate}deg)`;
+            container.innerHTML = `<img src="${src}" loading="lazy">`;
+            wall.appendChild(container);
+        });
+    }
 
-            // 定期產生雲朵
-            setInterval(() => {
-                const cloud = document.createElement('div');
-                cloud.className = 'cloud';
-                cloud.innerText = '☁️';
-                cloud.style.top = (10 + Math.random() * 30) + '%';
-                cloud.style.animationDuration = (20 + Math.random() * 40) + 's';
-                layer.appendChild(cloud);
-                setTimeout(() => cloud.remove(), 60000);
-            }, 8000);
-
-            // 定期產生鳥類
-            setInterval(() => {
-                const bird = document.createElement('div');
-                bird.className = 'bird';
-                bird.innerText = '🐦';
-                bird.style.top = (10 + Math.random() * 20) + '%';
-                bird.style.animationDuration = (10 + Math.random() * 10) + 's';
-                layer.appendChild(bird);
-                setTimeout(() => bird.remove(), 20000);
-            }, 15000);
-
-            // 日夜循環
-            updateSky();
-            setInterval(updateSky, 60000); // 每一分鐘檢查一次時間
+    const message = "親愛的老婆：\n\n情人節快樂！❤️\n\n謝謝妳總是在我身邊，默默地支持我考取老師、陪我走過那段壓力巨大的低潮期。妳不只是一個完美的妻子，更是我們雙胞胎寶貝最強大的依靠。\n\n我知道我平時比較木頭，不太會說甜言蜜語，但我內心真的很感激這輩子能遇到妳。這份網頁是我一點小小的驚喜，希望能讓妳感受到我的愛。\n\n老婆，辛苦了！我會努力給妳和孩子們更好的未來。";
+    let index = 0;
+    function typeWriter() {
+        if (index < message.length) {
+            document.getElementById("typewriter").innerHTML += message.charAt(index);
+            index++;
+            setTimeout(typeWriter, 120);
+        } else {
+            document.getElementById("gift-area").style.display = "block";
         }
+    }
 
-        function updateSky() {
-            const hour = new Date().getHours();
-            const view = document.getElementById('resort-view');
-            const skyline = document.getElementById('skyline');
-            const env = document.getElementById('env-layer');
-            const mtns = document.querySelectorAll('.mtn');
-            const deck = document.getElementById('deck');
+    const startDate = new Date('2021-08-05T00:00:00');
+    function updateCounter() {
+        const now = new Date();
+        const diff = now - startDate;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        let y = now.getFullYear() - startDate.getFullYear();
+        let m = now.getMonth() - startDate.getMonth();
+        let d = now.getDate() - startDate.getDate();
+        if (d < 0) { m--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+        if (m < 0) { y--; m += 12; }
+        document.getElementById('counter').innerHTML = `${y} 年 ${m} 個月 ${d} 天<br><small>(共 ${days} 天的幸福時光)</small>`;
+    }
+    setInterval(updateCounter, 1000);
 
-            // 移除舊星星
-            document.querySelectorAll('.star').forEach(s => s.remove());
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'heart'; heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = Math.random() * 3 + 3 + 's';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
+    }
+    setInterval(createHeart, 500);
 
-            let mtnColor, deckColor;
+    function openGift() { document.getElementById('giftModal').style.display = 'flex'; }
+    function closeGift() { document.getElementById('giftModal').style.display = 'none'; }
 
-            if (hour >= 18 || hour < 6) { // 夜晚
-                view.style.background = '#1a1a2e';
-                skyline.innerText = '🌙';
-                mtnColor = '#0f172a';
-                deckColor = '#3e2723';
-                // 星星
-                for (let i = 0; i < 50; i++) {
-                    const star = document.createElement('div');
-                    star.className = 'star';
-                    star.innerText = '✨';
-                    star.style.left = Math.random() * 100 + '%';
-                    star.style.top = Math.random() * 50 + '%';
-                    star.style.animationDelay = Math.random() * 3 + 's';
-                    env.appendChild(star);
-                }
-            } else if (hour >= 6 && hour < 10) { // 清晨
-                view.style.background = '#ff9a9e';
-                skyline.innerText = '🌅';
-                mtnColor = '#70484b';
-                deckColor = '#5d4037';
-            } else if (hour >= 16 && hour < 18) { // 黃昏
-                view.style.background = '#f093fb';
-                skyline.innerText = '🌇';
-                mtnColor = '#4a235a';
-                deckColor = '#4e342e';
-            } else { // 白天
-                view.style.background = '#aed6f1';
-                skyline.innerText = '☀️';
-                mtnColor = '#7fb3d5';
-                deckColor = '#8b4513';
-            }
-
-            mtns.forEach(m => m.style.background = mtnColor);
-            deck.style.background = deckColor;
-        }
-
-        // 初始化
-        function init() {
-            initEnvironment();
-            // 離線收益
-            const offlineTime = (Date.now() - game.lastSave) / 1000;
-            if (offlineTime > 60 && game.mps > 0) {
-                const earned = Math.floor(game.mps * offlineTime * 0.5);
-                game.money += earned;
-                alert(`歡迎回來！離線期間你的溫泉賺了 ${earned.toLocaleString()} 圓！`);
-            }
-
-            initTabs();
-            renderShop();
-            renderUpgrades();
-            updateUI();
-            
-            // 恢復裝飾
-            for (let id in game.items) {
-                for(let i=0; i<Math.min(game.items[id].count, 15); i++) spawnDecoration(id);
-            }
-        }
-
-        function initTabs() {
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.onclick = () => {
-                    document.querySelectorAll('.tab, .panel-content').forEach(el => el.classList.remove('active'));
-                    tab.classList.add('active');
-                    document.getElementById(`${tab.dataset.tab}-content`).classList.add('active');
-                };
-            });
-        }
-
-        function renderShop() {
-            const container = document.getElementById('shop-content');
-            container.innerHTML = '';
-            for (let id in game.items) {
-                const item = game.items[id];
-                const cost = Math.floor(item.baseCost * Math.pow(1.15, item.count));
-                const div = document.createElement('div');
-                div.className = `shop-item ${game.money < cost ? 'locked' : ''}`;
-                div.id = `shop-${id}`;
-                div.innerHTML = `
-                    <div class="item-count">${item.count}</div>
-                    <div class="item-icon">${item.icon}</div>
-                    <div class="item-details">
-                        <span class="item-name">${item.name}</span>
-                        <span class="item-desc">${item.desc}</span>
-                        <div class="item-stats">+${Math.floor(item.mps * game.prestigeMult)} /s</div>
-                    </div>
-                    <div class="item-cost-tag">${cost.toLocaleString()}</div>
-                `;
-                div.onclick = () => {
-                    const currentCost = Math.floor(item.baseCost * Math.pow(1.15, item.count));
-                    if (game.money >= currentCost) {
-                        game.money -= currentCost;
-                        item.count++;
-                        recalcMps();
-                        sounds.buy();
-                        if (item.count <= 15) spawnDecoration(id); // 改為傳入 id
-                        renderShop(); updateUI(); saveGame();
-                    }
-                };
-                container.appendChild(div);
-            }
-        }
-
-        function renderUpgrades() {
-            const container = document.getElementById('upgrades-content');
-            container.innerHTML = '<h2>🚀 研發中心</h2>';
-            for (let id in game.upgrades) {
-                const up = game.upgrades[id];
-                if (up.owned) continue;
-                const div = document.createElement('div');
-                div.className = `shop-item ${game.money < up.cost ? 'locked' : ''}`;
-                div.innerHTML = `
-                    <div class="item-icon">💡</div>
-                    <div class="item-details">
-                        <span class="item-name">${up.name}</span>
-                        <span class="item-desc">${up.desc}</span>
-                    </div>
-                    <div class="item-cost-tag">${up.cost.toLocaleString()}</div>
-                `;
-                div.onclick = () => {
-                    if (game.money >= up.cost) {
-                        game.money -= up.cost;
-                        up.owned = true;
-                        up.effect();
-                        sounds.buy();
-                        renderUpgrades(); updateUI(); saveGame();
-                    }
-                };
-                container.appendChild(div);
-            }
-        }
-
-        function updateUI() {
-            document.getElementById('money').innerText = Math.floor(game.money).toLocaleString();
-            document.getElementById('mps').innerText = Math.floor(game.mps).toLocaleString();
-            document.getElementById('level').innerText = game.level;
-            
-            // 更新按鈕鎖定狀態 (不重新渲染整個清單以保持效能)
-            document.querySelectorAll('.shop-item').forEach(el => {
-                const cost = parseInt(el.querySelector('.item-cost-tag').innerText.replace(/,/g, ''));
-                if (game.money >= cost) el.classList.remove('locked');
-                else el.classList.add('locked');
-            });
-
-            if (game.level >= 10) document.getElementById('prestige-btn').style.display = 'block';
-        }
-
-        // 定義各個設施的專屬區域
-        const ZONES = {
-            capybara: { left: 15, top: 75, spread: 15 }, // 左下草地
-            waiter: { left: 85, top: 75, spread: 10 },   // 右下接待區
-            herbal: { left: 20, top: 45, spread: 12 },   // 中左藥草區
-            outdoor: { left: 80, top: 40, spread: 15 },  // 中右露天區
-            hotel: { left: 50, top: 25, spread: 25 }     // 上方背景區
-        };
-
-        function spawnDecoration(id) {
-            const item = game.items[id];
-            if (!item || !ZONES[id]) return;
-
-            const zone = ZONES[id];
-            const el = document.createElement('div');
-            el.className = 'decor';
-            el.innerText = item.icon;
-            
-            // 在指定區域內加入一點隨機位移，讓它看起來自然但不混亂
-            const offsetX = (Math.random() - 0.5) * zone.spread;
-            const offsetY = (Math.random() - 0.5) * (zone.spread / 2);
-            
-            el.style.left = (zone.left + offsetX) + '%';
-            el.style.top = (zone.top + offsetY) + '%';
-            el.style.animationDelay = (Math.random() * 2) + 's';
-            
-            document.getElementById('decorations').appendChild(el);
-            
-            // 如果數量太多，移除最早的（保持效能）
-            if (decorations.childNodes.length > 60) decorations.removeChild(decorations.firstChild);
-        }
-
-        // 點擊邏輯
-        document.getElementById('clicker').onclick = (e) => {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const val = game.clickPower * (eventActive ? 10 : 1);
-            game.money += val; game.totalMoney += val;
-            sounds.click();
-            popText(e.clientX, e.clientY, `+${val}`, eventActive ? 'gold' : '');
-            createSteam(e.clientX, e.clientY);
-            checkLevel(); updateUI();
-        };
-
-        function popText(x, y, txt, color) {
-            const p = document.createElement('div');
-            p.className = 'click-pop animate__animated animate__fadeOutUp';
-            p.innerText = txt; p.style.left = x + 'px'; p.style.top = y + 'px';
-            if (color) p.style.color = color;
-            document.body.appendChild(p); setTimeout(() => p.remove(), 800);
-        }
-
-        function createSteam(x, y) {
-            for(let i=0; i<3; i++) {
-                const s = document.createElement('div');
-                s.className = 'steam-particle'; s.innerText = '☁️';
-                s.style.left = (x - 20 + Math.random() * 40) + 'px'; s.style.top = y + 'px';
-                document.body.appendChild(s); setTimeout(() => s.remove(), 3000);
-            }
-        }
-
-        function checkLevel() {
-            const next = Math.pow(game.level, 2) * 500;
-            if (game.totalMoney >= next) {
-                game.level++;
-                sounds.levelUp();
-                renderShop(); renderUpgrades(); updateUI();
-            }
-        }
-
-        // 隨機事件：黃金水豚
-        function triggerEvent() {
-            const capy = document.getElementById('golden-capy');
-            capy.style.left = Math.random() * 80 + 10 + '%';
-            capy.style.top = Math.random() * 70 + 10 + '%';
-            capy.style.display = 'block';
-            capy.classList.add('animate__bounceIn');
-            
-            capy.onclick = () => {
-                eventActive = true;
-                capy.style.display = 'none';
-                sounds.event();
-                document.body.style.boxShadow = "inset 0 0 100px gold";
-                setTimeout(() => {
-                    eventActive = false;
-                    document.body.style.boxShadow = "none";
-                }, 15000);
-            };
-
-            setTimeout(() => { capy.style.display = 'none'; }, 8000);
-        }
-
-        setInterval(() => { if (Math.random() < 0.1) triggerEvent(); }, 30000);
-
-        // 轉生
-        document.getElementById('prestige-btn').onclick = () => {
-            if (confirm(`轉生將會重置所有建築，但你會獲得 ${game.level * 10}% 的永久收益加成。確定嗎？`)) {
-                const newMult = game.prestigeMult + (game.level * 0.1);
-                game = JSON.parse(JSON.stringify(DEFAULT_GAME));
-                game.prestigeMult = newMult;
-                saveGame(); location.reload();
-            }
-        };
-
-        document.getElementById('reset-btn').onclick = () => { if(confirm('重置所有進度？')) { localStorage.removeItem('onsen_save_v2'); location.reload(); } };
-        document.getElementById('mute-btn').onclick = function() { muted = !muted; this.innerText = muted ? '🔇' : '🔊'; };
-
-        // 循環
-        setInterval(() => {
-            game.money += game.mps / 10;
-            game.totalMoney += game.mps / 10;
-            updateUI();
-        }, 100);
-        setInterval(saveGame, 5000);
-
-        init();
-    </script>
+    window.onload = () => {
+        loadRandomPhotos();
+        updateCounter();
+        setTimeout(typeWriter, 1500);
+    };
+</script>
 </body>
 </html>
