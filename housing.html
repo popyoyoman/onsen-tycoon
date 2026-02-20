@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雙和優質房產資訊站</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4a5568;
+            --accent-rent: #48bb78;
+            --accent-sale: #f56565;
+            --bg: #f7fafc;
+        }
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); margin: 0; padding: 0; color: #2d3748; }
+        header { background: white; padding: 40px 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        h1 { margin: 0; color: var(--primary); font-size: 1.8rem; }
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+        
+        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-bottom: 40px; }
+        .card-header { padding: 15px 25px; color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .rent-header { background: var(--accent-rent); }
+        .sale-header { background: var(--accent-sale); }
+        
+        .card-body { padding: 25px; }
+        
+        /* 圖片輪播樣式 */
+        .image-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+        .image-gallery img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; cursor: pointer; transition: transform 0.2s; }
+        .image-gallery img:hover { transform: scale(1.02); }
+        
+        .property-img-large { width: 100%; aspect-ratio: 4/3; background-color: #edf2f7; object-fit: cover; border-radius: 10px; margin-bottom: 20px; }
+        
+        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
+        .info-item { font-size: 0.95rem; }
+        .info-item b { color: var(--primary); }
+        
+        .description { line-height: 1.8; color: #4a5568; background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        
+        .contact-btn { display: block; width: 100%; padding: 15px; text-align: center; background: var(--primary); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; transition: opacity 0.2s; }
+        .contact-btn:hover { opacity: 0.9; }
+
+        .tag { padding: 4px 10px; border-radius: 5px; font-size: 0.8rem; background: rgba(255,255,255,0.2); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🏠 房產主動經營中心</h1>
+        <p style="color: #a0aec0;">屋主直接聯繫 · 省下仲介費用 · 誠意交易</p>
+    </header>
+
+    <div class="container">
+        <!-- 永和出租 -->
+        <div class="card">
+            <div class="card-header rent-header">
+                <span>永和區 · 優質溫馨自租</span>
+                <span class="tag">歡迎預約看房</span>
+            </div>
+            <div class="card-body">
+                <div class="image-gallery">
+                    <img src="images/rent_1.jpg" alt="臥室1">
+                    <img src="images/rent_2.jpg" alt="臥室2">
+                    <img src="images/rent_3.jpg" alt="客廳">
+                    <img src="images/rent_4.jpg" alt="動線">
+                    <img src="images/rent_5.jpg" alt="臥室3">
+                    <img src="images/rent_6.jpg" alt="臥室4">
+                    <img src="images/rent_7.jpg" alt="收納">
+                    <img src="images/rent_8.jpg" alt="臥室5">
+                    <img src="images/rent_9.jpg" alt="衛浴1">
+                    <img src="images/rent_10.jpg" alt="衛浴2">
+                </div>
+                <div class="info-grid">
+                    <div class="info-item"><b>💰 租金：</b>誠可議 / 月</div>
+                    <div class="info-item"><b>📏 坪數：</b>格局方正</div>
+                    <div class="info-item"><b>🏢 型態：</b>公寓/透天分租</div>
+                    <div class="info-item"><b>🚇 交通：</b>永和生活圈 (近捷運)</div>
+                </div>
+                <div class="description">
+                    ✨ <b>環境清幽，採光極佳！</b><br>
+                    房間重新整理過，具備木紋地板，溫馨舒適。附書桌、床組及冷氣。公共空間寬敞明亮，樓梯乾淨。屋主直租，尋找愛乾淨、穩定的好房客。
+                </div>
+                <a href="https://t.me/your_telegram_link" class="contact-btn">📞 點我獲取完整資訊</a>
+            </div>
+        </div>
+
+        <!-- 中和出售 -->
+        <div class="card">
+            <div class="card-header sale-header">
+                <span>中和區 · 南勢角捷運旁金店面</span>
+                <span class="tag">稀有自售</span>
+            </div>
+            <div class="card-body">
+                <img src="images/sale_main.jpg" alt="店面權狀資訊" class="property-img-large">
+                <div class="info-grid">
+                    <div class="info-item"><b>💰 售價：</b>誠者面議</div>
+                    <div class="info-item"><b>📏 坪數：</b>權狀 42.43 坪 (主建 31.35)</div>
+                    <div class="info-item"><b>🏢 型態：</b>大寬金店 (含地下室)</div>
+                    <div class="info-item"><b>📍 地址：</b>和平街 24 巷 1 號</div>
+                </div>
+                <div class="description">
+                    🚀 <b>南勢角捷運站旁，極稀有大地坪店面！</b><br>
+                    具備超大面寬，吸睛度高。除了主建物外，另有地下室可彈性使用，空間利用率極高。緊鄰夜市與捷運出口人流，是投資或創業的最佳選擇。
+                </div>
+                <a href="https://t.me/your_telegram_link" class="contact-btn">📩 私訊屋主洽談細節</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
