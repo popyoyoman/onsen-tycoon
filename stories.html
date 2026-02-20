@@ -3,158 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>故事銀行：靈感儲蓄所 - Story Vault</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>奇遇的故事銀行 | 專業溫馨的閱讀空間</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f0f2f5;
-            --primary: #2c3e50;
-            --accent: #d35400; 
-            --secondary: #7f8c8d;
-            --front-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --back-bg: #fff9f5;
+            --bg: #fffbf8; /* 暖米色背景 */
+            --text-main: #2c2c2c;
+            --text-sub: #7a7a7a;
+            --accent: #d4a373; /* 溫馨的琥珀色 */
+            --card-bg: #ffffff;
+            --line: #f1e9e2;
         }
-
-        * { box-sizing: border-box; }
 
         body {
             font-family: 'Noto Sans TC', sans-serif;
             background-color: var(--bg);
-            color: var(--primary);
+            color: var(--text-main);
             margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
         }
 
         header {
-            background: var(--primary);
-            color: white;
-            padding: 40px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px 20px 60px 20px;
             text-align: center;
         }
 
         header h1 {
             font-family: 'Noto Serif TC', serif;
-            font-size: 2.5rem;
+            font-size: 3.2rem;
             margin: 0;
+            color: #4a4a4a;
             letter-spacing: 2px;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
-            flex-grow: 1;
+        header p {
+            font-size: 1.2rem;
+            color: var(--text-sub);
+            margin-top: 20px;
+            font-weight: 300;
         }
 
-        /* 篩選列 */
-        .filter-bar {
+        .nav-filter {
+            max-width: 900px;
+            margin: 0 auto 50px auto;
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
+            gap: 15px;
             flex-wrap: wrap;
         }
 
         .filter-btn {
-            border: 1px solid #ddd;
-            background: white;
-            padding: 6px 18px;
-            border-radius: 20px;
+            background: transparent;
+            border: 1px solid var(--line);
+            padding: 8px 20px;
+            border-radius: 25px;
             cursor: pointer;
+            color: var(--text-sub);
             transition: all 0.3s;
             font-size: 0.9rem;
         }
 
-        .filter-btn.active {
+        .filter-btn.active, .filter-btn:hover {
             background: var(--accent);
             color: white;
             border-color: var(--accent);
+            box-shadow: 0 4px 15px rgba(212, 163, 115, 0.3);
         }
 
-        /* 故事網格 */
-        .story-grid {
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .story-item {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            border: 1px solid var(--line);
+            display: grid;
+            grid-template-columns: 80px 1fr;
             gap: 30px;
-            perspective: 1000px; /* 3D 透視 */
+            transition: transform 0.3s;
         }
 
-        /* 翻牌容器 */
-        .card-container {
-            width: 100%;
-            height: 450px;
-            cursor: pointer;
+        .story-item:hover {
+            transform: translateY(-5px);
         }
 
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 20px;
-        }
-
-        .card-container.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        /* 卡片正面與背面 */
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 20px;
-            padding: 30px;
+        .story-icon {
+            font-size: 3rem;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            width: 80px; height: 80px;
+            border-radius: 15px;
         }
 
-        /* 正面樣式 (類比 SwiftUI 的 Color.blue.gradient) */
-        .card-front {
-            background: var(--front-gradient);
-            color: white;
+        .story-content h2 {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.8rem;
+            margin: 0 0 15px 0;
+            color: #333;
         }
 
-        .card-front .icon { font-size: 60px; margin-bottom: 20px; }
-        .card-front h2 { font-family: 'Noto Serif TC', serif; font-size: 1.8rem; margin: 0 0 10px 0; }
-        .card-front .quote { font-size: 1.1rem; opacity: 0.9; font-weight: 300; }
-
-        /* 背面樣式 (類比 SwiftUI 的 Color.orange.opacity(0.2)) */
-        .card-back {
-            background-color: var(--back-bg);
-            color: var(--primary);
-            transform: rotateY(180deg);
-            text-align: left;
-            justify-content: flex-start;
-            overflow-y: auto;
-            border: 2px solid #ffedd5;
+        .story-quote {
+            color: var(--accent);
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            display: block;
         }
 
-        .card-back h3 { 
-            color: var(--accent); 
-            border-bottom: 2px solid #ffd8a8; 
-            padding-bottom: 5px; 
-            margin-top: 0;
-            font-size: 1.2rem;
+        .story-details {
+            font-size: 1.05rem;
+            color: #555;
+            margin-bottom: 25px;
         }
 
-        .story-section { margin-bottom: 15px; font-size: 0.95rem; line-height: 1.5; }
-        .story-section b { color: var(--accent); margin-right: 5px; }
+        .story-section {
+            margin-bottom: 8px;
+            display: flex;
+            gap: 10px;
+        }
 
-        footer { text-align: center; padding: 40px; color: var(--secondary); font-size: 0.8rem; }
+        .story-section b { color: var(--accent); min-width: 60px; }
+
+        footer {
+            margin: 100px 0 50px 0;
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+        }
 
         @media (max-width: 600px) {
-            .story-grid { grid-template-columns: 1fr; }
-            .card-container { height: 500px; }
+            .story-item { grid-template-columns: 1fr; padding: 30px; }
+            header h1 { font-size: 2.2rem; }
         }
     </style>
 </head>
@@ -162,224 +153,94 @@
 
     <header>
         <h1>🏦 故事銀行</h1>
-        <p>點擊卡片以翻轉提取靈感</p>
+        <p>每一張卡片，都是一段值得細細品讀的生命印記。</p>
     </header>
 
-    <div class="container">
-        <div class="filter-bar">
-            <button class="filter-btn active" data-category="all">全部</button>
-            <button class="filter-btn" data-category="氣運">氣運研究</button>
-            <button class="filter-btn" data-category="歷史">歷史翻案</button>
-            <button class="filter-btn" data-category="2026">2026 期刊</button>
-            <button class="filter-btn" data-category="靈感">創作靈感</button>
-        </div>
+    <div class="nav-filter">
+        <button class="filter-btn active" onclick="render('all')">全部故事</button>
+        <button class="filter-btn" onclick="render('教育')">教育研究</button>
+        <button class="filter-btn" onclick="render('歷史')">歷史翻案</button>
+        <button class="filter-btn" onclick="render('經歷')">人生經歷</button>
+    </div>
 
-        <div class="story-grid" id="story-grid">
-            <!-- 翻轉卡片由 JS 生成 -->
-        </div>
+    <div class="container" id="story-grid">
+        <!-- 內容由 JS 動態生成 -->
     </div>
 
     <footer>
-        &copy; 2026 故事銀行 - 靈感隨時翻轉
+        &copy; 2026 奇遇的故事銀行 - 專業且溫馨的數位收藏
     </footer>
 
     <script>
         const stories = [
             {
-                id: 1,
-                title: "開運羅盤的背後",
-                quote: "奪來的運氣，終將反噬其身",
-                category: "氣運",
-                icon: "🌀",
-                details: {
-                    goal: "女主立志考上名校翻轉命運。",
-                    obstacle: "家人利用羅盤強行將其氣運轉移給弟弟。",
-                    effort: "暗中觀察規律，自學玄學博弈知識。",
-                    result: "關鍵時刻切斷氣運連結，奪回主控權。",
-                    twist: "弟弟貪得無厭導致羅盤能量超載崩潰。",
-                    ending: "女主重獲氣運如願升學，完成翻案。"
-                }
+                category: "教育",
+                icon: "🎓",
+                title: "OECD 教育趨勢 2026",
+                quote: "AI 時代，讓學習回歸個性化的溫度",
+                details: "這份報告深刻定義了未來五年的教育走向，AI 將成為孩子最親密的學習夥伴，幫助發掘每個人獨特的天賦。"
             },
             {
-                id: 2,
-                title: "崇禎皇帝的最後一搏",
-                quote: "勤政之下的悲劇性定格",
+                category: "經歷",
+                icon: "🛁",
+                title: "溫泉池裡的一週歲慶生",
+                quote: "最平凡的瞬間，最深刻的溫暖",
+                details: "2024 年暑假，全家人在蒸騰的煙霧與笑聲中，見證了寶貝第一個生日。這張照片承載了祖孫三代交會的愛。"
+            },
+            {
+                category: "經歷",
+                icon: "🚶‍♂️",
+                title: "寶貝跨出的第一步",
+                quote: "2024 暑假，勇氣的開始",
+                details: "在那次聚餐中，寶貝第一次張開手搖晃地走向我們。這一小步，是全家人屏息以待的奇蹟瞬間。"
+            },
+            {
+                category: "教育",
+                icon: "🧠",
+                title: "社交情緒學習 (SEL)",
+                quote: "哈佛研究：情感力是未來的競爭力",
+                details: "在高度自動化的世界，自我覺察與同理心將成為孩子最堅實的盔甲。研究顯示，SEL 能提升學業表現達 11%。"
+            },
+            {
                 category: "歷史",
                 icon: "🏯",
-                details: {
-                    goal: "在內憂外患中挽救大明江山。",
-                    obstacle: "遭遇小冰河期極端氣候災難。",
-                    effort: "宵衣旰食、裁撤冗員、自罪求助。",
-                    result: "財政死結無法解開，李自成攻破北京。",
-                    twist: "科學研究顯示氣候變遷非人力可逆轉。",
-                    ending: "評價從「亡國之君」翻案為「悲劇英雄」。"
-                }
-            },
-            {
-                id: 3,
-                title: "2026 運氣科學",
-                quote: "運氣是感知敏銳度的副產品",
-                category: "靈感",
-                icon: "🧭",
-                details: {
-                    goal: "透過科學方法增加個人幸運機率。",
-                    obstacle: "演算法導致的隨機機緣貧乏。",
-                    effort: "實踐偶然性管理，建立弱連結互動。",
-                    result: "潛在機會與新靈感提升了 40%。",
-                    twist: "過度追求最優解反而會抹殺運氣。",
-                    ending: "建立了一套主動創造機緣的生活系統。"
-                }
-            },
-            {
-                id: 4,
-                title: "幸運的籃球隊長",
-                quote: "繞遠路才是捷徑",
-                category: "靈感",
-                icon: "🏀",
-                details: {
-                    goal: "在決賽中帶領球隊獲得勝利。",
-                    obstacle: "主將受傷且原本熟悉的進攻戰術失效。",
-                    effort: "放棄速成策略，改練最基礎的防守與傳球。",
-                    result: "看似進展緩慢，卻建立了強大的團隊默契。",
-                    twist: "最後一刻對手體力耗盡，基礎功成為關鍵。",
-                    ending: "體會到紮實的基本功才是最強的幸運符。"
-                }
-            },
-            {
-                id: 5,
-                title: "大奉打更人：氣運之子",
-                quote: "身負半數國運，在權謀中翻案真相",
-                category: "氣運",
-                icon: "🕵️",
-                details: {
-                    goal: "現代警察穿越後，試圖在波譎雲詭的大奉王朝生存。",
-                    obstacle: "身陷稅銀失竊案，且體內隱藏著足以毀滅世界的國運。",
-                    effort: "利用現代刑偵邏輯破案，並在儒、道、佛三教間周旋。",
-                    result: "從底層打更人一路晉升，揭開皇室背後的驚天秘密。",
-                    twist: "所謂的「運氣」，其實是千年前佈下的巨大棋局。",
-                    ending: "成功守護國運並翻轉大奉命運，成為真正的掌棋者。"
-                }
-            },
-            {
-                id: 6,
-                title: "臺灣經濟四百年的迷思",
-                quote: "打破奇蹟神話，重看發展規律",
-                category: "歷史",
-                icon: "📈",
-                details: {
-                    goal: "吳聰敏教授試圖客觀還原臺灣四百年的經濟真相。",
-                    obstacle: "大眾對「國民黨經濟奇蹟」有著根深蒂固的既定印象。",
-                    effort: "運用嚴謹的計量經濟學，分析日治時期與戰後的數據對比。",
-                    result: "發現許多成長動能其實在更早之前就已奠定基礎。",
-                    twist: "傳統教科書中的許多「英雄事蹟」其實是受全球局勢驅動。",
-                    ending: "成功為臺灣經濟史「翻案」，還原數據與事實的本質。"
-                }
-            },
-            {
-                id: 7,
-                title: "借運者的代價",
-                quote: "走捷徑的人，往往要在出口付出利息",
-                category: "氣運",
-                icon: "💸",
-                details: {
-                    goal: "一名落魄商人通過黑市秘術「借」走競爭對手的運氣。",
-                    obstacle: "借來的運氣無法持久，且副作用導致身體迅速老化。",
-                    effort: "不斷尋找新的「運源」來填補空缺，陷入惡性循環。",
-                    result: "短期內大富大貴，卻失去所有親人與健康。",
-                    twist: "最後發現當初借出的竟然是自己「未來的壽命」。",
-                    ending: "回歸平凡，體悟到唯有腳踏實地的努力才是真實的氣運。"
-                }
-            },
-            {
-                id: 8,
-                title: "2026：代理型 AI 元年",
-                quote: "從工具到代理，AI 開始擁有自主執行的能力",
-                category: "2026",
-                icon: "🤖",
-                details: {
-                    goal: "探索 2026 年企業如何透過 Agentic AI 實現完全自動化營運。",
-                    obstacle: "技術成熟度不均與倫理監管的雙重挑戰。",
-                    effort: "跨國諮詢機構（如 Deloitte）發布深度趨勢報告。",
-                    result: "AI 不再只是對話，而是能代表人類完成複雜的商務決策。",
-                    twist: "人類的角色從「執行者」轉變為「意圖管理者」。",
-                    ending: "定義了 2026 年為人工智慧真正滲透進生活骨幹的一年。"
-                }
-            },
-            {
-                id: 9,
-                title: "2026 消費心理報告",
-                quote: "在「無腦廢文」與「數位排毒」之間找平衡",
-                category: "2026",
-                icon: "📱",
-                details: {
-                    goal: "理解 2026 年消費者為什麼對數位世界感到疲憊。",
-                    obstacle: "演算法過載與虛假訊息氾濫導致的心理過載。",
-                    effort: "WGSN 與 Vogue 聯合發布趨勢預測。",
-                    result: "極端粉絲經濟（Superfandom）與離線回歸同步發生。",
-                    twist: "最成功的品牌不再追求流量，而是追求真實的「共感」。",
-                    ending: "揭示了 2026 年「真實性」才是最強大的商業競爭力。"
-                }
-            },
-            {
-                id: 10,
-                title: "丙午紅馬年的氣運流轉",
-                quote: "烈火奔馬，大變局中的生存之道",
-                category: "2026",
-                icon: "🐎",
-                details: {
-                    goal: "解析 2026（丙午年）在傳統玄學中的大趨勢。",
-                    obstacle: "天干地支皆屬火，象徵極端能量、快速變動與衝突。",
-                    effort: "整合各家開運期刊與星象分析報告。",
-                    result: "預測金融市場與社會結構將面臨劇烈的重組。",
-                    twist: "看似危險的「火」，卻也是焚毀舊習、迎來重生的契機。",
-                    ending: "建議以「守中、冷靜、靈活」作為 2026 年的最佳處世方針。"
-                }
+                title: "崇禎皇帝的最後一搏",
+                quote: "重新解讀大明終局的悲劇英雄",
+                details: "當我們撇開成敗論英雄，會發現崇禎在極端天災下的勤政與掙扎，其實是一場非人力可逆轉的時代悲劇。"
             }
         ];
 
-        function renderStories(filter = 'all') {
+        function render(filter) {
             const grid = document.getElementById('story-grid');
             grid.innerHTML = '';
+            
             const filtered = filter === 'all' ? stories : stories.filter(s => s.category === filter);
-
-            filtered.forEach(story => {
-                const container = document.createElement('div');
-                container.className = 'card-container';
-                container.onclick = () => container.classList.toggle('flipped');
-                
-                container.innerHTML = `
-                    <div class="card-inner">
-                        <!-- 正面 -->
-                        <div class="card-front">
-                            <div class="icon">${story.icon}</div>
-                            <h2>${story.title}</h2>
-                            <div class="quote">「${story.quote}」</div>
-                        </div>
-                        <!-- 背面 -->
-                        <div class="card-back">
-                            <h3>📜 故事脈絡</h3>
-                            <div class="story-section"><b>🎯 目標：</b>${story.details.goal}</div>
-                            <div class="story-section"><b>🚧 阻礙：</b>${story.details.obstacle}</div>
-                            <div class="story-section"><b>💪 努力：</b>${story.details.effort}</div>
-                            <div class="story-section"><b>📝 結果：</b>${story.details.result}</div>
-                            <div class="story-section"><b>🔄 意外轉彎：</b>${story.details.twist}</div>
-                            <div class="story-section"><b>🎌 結局：</b>${story.details.ending}</div>
-                        </div>
+            
+            filtered.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'story-item';
+                div.innerHTML = `
+                    <div class="story-icon">${s.icon}</div>
+                    <div class="story-content">
+                        <span class="story-quote">「${s.quote}」</span>
+                        <h2>${s.title}</h2>
+                        <div class="story-details">${s.details}</div>
                     </div>
                 `;
-                grid.appendChild(container);
+                grid.appendChild(div);
+            });
+
+            // 更新按鈕樣式
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if(btn.innerText.includes(filter) || (filter === 'all' && btn.innerText === '全部故事')) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
             });
         }
 
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll('.filter-btn').forEach(el => el.classList.remove('active'));
-                btn.classList.add('active');
-                renderStories(btn.dataset.category);
-            };
-        });
-
-        renderStories();
+        render('all');
     </script>
 </body>
 </html>
