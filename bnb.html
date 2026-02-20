@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>奇遇民宿 | 2026 深度旅宿方案</title>
+    <title>2026 旅宿業轉型研究 | 奇遇的故事銀行</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -21,112 +21,133 @@
             color: var(--text-main);
             margin: 0;
             line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
 
-        header { text-align: center; padding: 60px 0; }
-        header h1 { font-family: 'Noto Serif TC', serif; font-size: 2.8rem; margin: 0; color: #4a4a4a; }
-        header p { color: var(--accent); font-weight: 500; letter-spacing: 2px; }
+        header { text-align: center; padding: 80px 0 40px 0; }
+        header p { color: var(--accent); font-weight: 700; letter-spacing: 3px; font-size: 0.9rem; }
+        header h1 { font-family: 'Noto Serif TC', serif; font-size: 2.8rem; margin: 10px 0; color: #4a4a4a; }
 
-        .magazine-section {
+        .journal-section {
             background: var(--card-bg);
-            padding: 50px;
-            border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.02);
+            padding: 60px;
+            border-radius: 4px; /* 雜誌感走直角或極微圓角 */
+            box-shadow: 0 30px 60px rgba(0,0,0,0.02);
             border: 1px solid var(--line);
             margin-bottom: 50px;
+            position: relative;
         }
 
-        h2 { font-family: 'Noto Serif TC', serif; font-size: 2rem; border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 10px; margin-bottom: 30px; }
+        .journal-section::before {
+            content: "CASE STUDY / 2026-Q1";
+            position: absolute;
+            top: 30px;
+            left: 60px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        h2 { font-family: 'Noto Serif TC', serif; font-size: 2.2rem; margin-bottom: 40px; color: #333; line-height: 1.3; }
 
         .story-text { font-size: 1.15rem; color: #444; text-align: justify; }
-        .story-text p { margin-bottom: 20px; }
+        .story-text p { margin-bottom: 25px; }
 
-        /* 進化後的流程區塊 */
+        .divider { height: 1px; background: var(--line); margin: 40px 0; }
+
+        .evolution-title { font-family: 'Noto Serif TC', serif; font-size: 1.8rem; color: var(--accent); margin-bottom: 30px; }
+
         .workflow-card {
-            background: #fdfaf5;
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px dashed var(--accent);
+            background: #fffcf9;
+            border-radius: 0;
+            padding: 40px;
+            border: 1px solid var(--line);
             margin-top: 40px;
         }
-        .step { display: flex; gap: 20px; margin-bottom: 20px; }
-        .step-num { background: var(--accent); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: bold; }
+        .step { display: flex; gap: 25px; margin-bottom: 30px; }
+        .step:last-child { margin-bottom: 0; }
+        .step-num { color: var(--accent); font-family: 'Noto Serif TC', serif; font-size: 1.5rem; font-weight: bold; padding-top: 5px; }
         
-        .cta-box { text-align: center; margin-top: 40px; }
-        .btn-line { background: #00b900; color: white; padding: 15px 40px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-block; box-shadow: 0 10px 20px rgba(0,185,0,0.2); transition: transform 0.3s; }
-        .btn-line:hover { transform: translateY(-3px); }
+        .cta-box { text-align: center; margin-top: 60px; padding: 40px; background: #fafafa; border-radius: 8px; }
+        .btn-line { background: #1a1a1a; color: white; padding: 18px 50px; text-decoration: none; font-weight: 700; display: inline-block; transition: background 0.3s; letter-spacing: 1px; }
+        .btn-line:hover { background: var(--accent); }
 
-        footer { text-align: center; padding: 40px; color: #ccc; font-size: 0.8rem; }
+        footer { text-align: center; padding: 60px; color: #ccc; font-size: 0.8rem; border-top: 1px solid var(--line); }
+
+        @media (max-width: 600px) {
+            .journal-section { padding: 30px; }
+            header h1 { font-size: 2rem; }
+            h2 { font-size: 1.6rem; }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <header>
-            <p>2026 RETREAT EXPERIENCE</p>
-            <h1>奇遇民宿</h1>
-            <div style="margin-top: 10px; color: #999;">由「奇遇的故事銀行」主理人精心策劃</div>
+            <p>HOSPITALITY EVOLUTION REPORT</p>
+            <h1>奇遇旅宿案研究</h1>
+            <div style="margin-top: 10px; color: #999; font-size: 0.9rem;">收錄於《奇遇的故事銀行》2026 年度選集</div>
         </header>
 
-        <!-- 萬維鋼風格：7步驟故事區 -->
-        <div class="magazine-section">
-            <h2>📜 為什麼真正的旅程，是為了遇見那個「不知道」的自己？</h2>
+        <div class="journal-section">
+            <h2>為什麼在自動化時代，「不便」反而成了最高級的奢侈品？</h2>
             <div class="story-text">
-                <p>在一個追求極致效率的 2026 年，我的父親大衛經營著這間民宿。他的標很單純：希望能為每一位疲憊的城市旅人，提供一個無懈可擊的避風港，讓客人在踏進門的那一刻起，就能感受到如同星級飯店般的標準化服務。</p>
+                <p>在阿爾卑斯山脈的一間獨立旅宿，曾進行過一場關於「極致效率」的社會學實驗。該店的初始目標極為超前：引進 2026 年最強大的代理型 AI，實現從訂房到客房服務的「零人工干預」，試圖打造一個無懈可擊的、高頻率流轉的數位避風港。</p>
 
-                <p>然而，大衛很快遇到了阻礙。他發現，儘管他把床單鋪得再平整、備品換得再高級，客人的滿意度卻始終停留在「及格線」。在這個 AI 自動化一切的時代，客人要的不再是「準確」，而大衛卻在準確上耗費了所有精力，甚至沒空跟客人說上一句話。</p>
+                <p>然而，實驗在第三個月撞上了堅硬的阻礙。數據顯示，儘管「準確度」達到了 100%，但客人的二次回訪率卻降到了歷史最低。在訪談中，客人留下了一個反直覺的評價：「這裡太過完美，以至於讓人感到冰冷與窒息。」在 AI 已經能精準預測你所有需求的 2026 年，這種「零摩擦」的服務反而削弱了旅行的價值。</p>
 
-                <p>於是他決定進行一場流程進化。他引進了我的 AI 小秘書系統，將繁瑣的交通指引、訂房確認、餐飲偏好全部自動化。大衛開始把多出來的精力，投入到那幾棵他親手種植的茶樹上，並在民宿的一角設立了一個專門放置「靈感故事」的書櫃。</p>
+                <p>該旅宿隨即展開了一場被學界稱為「餘裕重構」的流程進化。他們將 AI 的功能鎖定在處理交通、對帳與基礎諮詢等「低價值瑣事」上。騰出來的時間，則被強制分配到了一種「非標準化活動」：由主理人與客人進行一次毫無目的的午後茶敘，或是在空間中設置需親手操作的物理互動。</p>
 
-                <p>結果令人驚訝。數據顯示，客人的回流率在三個月內提升了 40%。他們開始主動在 Google 上寫下長篇大論的評論，但提到的卻不是床多軟，而是大衛親手泡的一壺茶，以及那段午後的對話。</p>
+                <p>結果是震撼性的。三個月後，該旅宿的溢價空間（Premium Pricing）提升了 30%。客人在社交媒體分享的不再是房間的科技感，而是那段「被浪費的時光」。</p>
 
-                <p>意外發生在一個大雨傾盆的午後。當天因為斷電，所有的自動化系統都失效了，大衛手忙腳亂。一位原本以「挑剔」聞名的科技業客人，在那一刻不但沒有生氣，反而主動拿起掃帚幫大衛清理積水。在那個混亂、黑暗且沒有 Wi-Fi 的下午，他們兩人在燭光下聊了整整三個小時。</p>
+                <p>最令研究者驚訝的意外發生在一次區域性網路故障中。當所有 AI 服務瞬間中斷時，原本被視為危機的時刻，卻引發了當季最高的客戶滿意度。客人在蠟燭光下與彼此長談，甚至參與了廚房的簡單備餐。</p>
 
-                <p>最深刻的彎曲在那一刻浮現：大衛原本以為，這三個月來客人的快樂來自於「進化的流程」。但那個杯子碎掉、訊號中斷的時刻才讓他明白，**他真正進化的不是流程，而是「餘裕」**。因為流程自動化了，他才有餘裕在混亂中保持從容，這份從容才是客人在數位時代最想買單的稀缺商品。</p>
+                <p>這個案例最深刻的轉彎在於：我們一直以為科技是用來「節省時間」的，但真正頂級的進化，是利用科技產生的剩餘價值，去換取「有質量的衝突與不便」。</p>
 
-                <p>最終，奇遇民宿不再標榜自己有多高效。我們定義了一種全新的「2026 款待模型」：用最硬的技術處理瑣事，把最軟的時間留給生命中不可預期的奇遇。</p>
+                <p>最終，這場實驗定義了 2026 年旅宿業的聖經：**「流程自動化是基礎，情感不透明度才是靈魂。」** 真正的奢華，不再是有人為你打理一切，而是你終於有餘裕，去經歷一場無法被演算法預測的真實奇遇。</p>
             </div>
-        </div>
 
-        <!-- 流程進化展示區 -->
-        <div class="magazine-section">
-            <h2>🛠️ 2026 服務流程進化方案</h2>
-            <p style="color: #666; margin-bottom: 30px;">我們如何利用 AI 技術，將這份溫度傳遞給你？</p>
+            <div class="divider"></div>
+
+            <div class="evolution-title">🛠️ 應用方案：2026 進化服務</div>
             
             <div class="workflow-card">
                 <div class="step">
-                    <div class="step-num">1</div>
+                    <div class="step-num">01</div>
                     <div>
                         <b>數位預診 (Digital Pre-Check)</b><br>
-                        訂房完成後，AI 小秘書會與您簡單交流，記下您的飲食偏好與此行的心情目標，省去現場繁瑣登記。
+                        由 AI 處理所有瑣碎登記，精準捕捉您的喜好，將「行政摩擦」降至零。
                     </div>
                 </div>
                 <div class="step">
-                    <div class="step-num">2</div>
+                    <div class="step-num">02</div>
                     <div>
-                        <b>故事地圖引導</b><br>
-                        入住時，您將獲得專屬的數位導覽網頁。掃描空間中的 QR Code，聆聽每件家具與植物背後的「七步驟故事」。
+                        <b>故事地圖引導 (Narrative Map)</b><br>
+                        透過空間中的物理錨點（QR Code），將建築與植物的生命史轉化為沉浸式體驗。
                     </div>
                 </div>
                 <div class="step">
-                    <div class="step-num">3</div>
+                    <div class="step-num">03</div>
                     <div>
-                        <b>回憶存摺贈禮</b><br>
-                        退房後，系統會自動彙整您在民宿拍的照片，生成精美的「家庭奇遇網頁」作為伴手禮，讓回憶永恆。
+                        <b>回憶存摺贈禮 (Memory Vault)</b><br>
+                        退房後，系統自動將您的奇遇瞬間轉化為私人專屬網頁，實現情感資產的永久儲存。
                     </div>
                 </div>
             </div>
 
             <div class="cta-box">
-                <a href="https://line.me/ti/p/~wanbadan3310" class="btn-line">💬 聯繫主理人 | 預約您的奇遇時光</a>
-                <p style="font-size: 0.85rem; color: #999; margin-top: 15px;">（諮詢免仲介費，由屋主直營）</p>
+                <p style="margin-bottom: 20px; font-weight: 500;">體驗這場關於「餘裕」的進化計畫：</p>
+                <a href="https://line.me/ti/p/~wanbadan3310" class="btn-line">CONTACT THE OWNER</a>
+                <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">（屋主直營 · 誠意預約）</p>
             </div>
         </div>
 
         <footer>
-            &copy; 2026 奇遇民宿 | 專業溫馨的極致體驗
+            &copy; 2026 奇遇的故事銀行 | 讓閱讀與生活回歸深度
         </footer>
     </div>
 
