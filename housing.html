@@ -24,12 +24,9 @@
         
         .card-body { padding: 25px; }
         
-        /* 圖片輪播樣式 */
         .image-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
         .image-gallery img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; cursor: pointer; transition: transform 0.2s; }
         .image-gallery img:hover { transform: scale(1.02); }
-        
-        .property-img-large { width: 100%; aspect-ratio: 4/3; background-color: #edf2f7; object-fit: cover; border-radius: 10px; margin-bottom: 20px; }
         
         .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
         .info-item { font-size: 0.95rem; }
@@ -37,7 +34,7 @@
         
         .description { line-height: 1.8; color: #4a5568; background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
         
-        .contact-btn { display: block; width: 100%; padding: 15px; text-align: center; background: var(--primary); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; transition: opacity 0.2s; }
+        .contact-btn { display: block; width: 100%; padding: 15px; text-align: center; background: #00b900; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; transition: opacity 0.2s; font-size: 1.1rem; }
         .contact-btn:hover { opacity: 0.9; }
 
         .tag { padding: 4px 10px; border-radius: 5px; font-size: 0.8rem; background: rgba(255,255,255,0.2); }
@@ -47,10 +44,38 @@
 
     <header>
         <h1>🏠 房產主動經營中心</h1>
-        <p style="color: #a0aec0;">屋主直接聯繫 · 省下仲介費用 · 誠意交易</p>
+        <p style="color: #a0aec0;">屋主直租自售 · 省下高額仲介費 · 誠信交易</p>
     </header>
 
     <div class="container">
+        
+        <!-- 中和出售 -->
+        <div class="card">
+            <div class="card-header sale-header">
+                <span>中和區 · 南勢角捷運旁金店面</span>
+                <span class="tag">稀有自售</span>
+            </div>
+            <div class="card-body">
+                <div class="image-gallery">
+                    <img src="images/sale_1.jpg" alt="平面圖">
+                    <img src="images/sale_3.jpg" alt="吧檯">
+                    <img src="images/sale_6.jpg" alt="大空間">
+                    <img src="images/sale_20.jpg" alt="門口">
+                </div>
+                <div class="info-grid">
+                    <div class="info-item"><b>💰 售價：</b>誠者面議 (自售省百萬)</div>
+                    <div class="info-item"><b>📏 坪數：</b>權狀 42.43 坪 / 主建 31.35</div>
+                    <div class="info-item"><b>🏢 型態：</b>大寬面金店面 (含地下室)</div>
+                    <div class="info-item"><b>📍 地址：</b>和平街 24 巷 1 號</div>
+                </div>
+                <div class="description">
+                    🚀 <b>南勢角捷運站出口旁，創業者首選！</b><br>
+                    具備<b>超大面寬</b>，店面視覺效果極佳。內部裝潢具備質感紅磚吧檯，空間寬敞，另有寬大的地下室可供倉儲或延伸使用。適合零售、美容、診所或工作室。
+                </div>
+                <a href="https://line.me/ti/p/~wanbadan3310" class="contact-btn">💬 直接加屋主 LINE 洽談細節</a>
+            </div>
+        </div>
+
         <!-- 永和出租 -->
         <div class="card">
             <div class="card-header rent-header">
@@ -59,52 +84,25 @@
             </div>
             <div class="card-body">
                 <div class="image-gallery">
-                    <img src="images/rent_1.jpg" alt="臥室1">
-                    <img src="images/rent_2.jpg" alt="臥室2">
-                    <img src="images/rent_3.jpg" alt="客廳">
-                    <img src="images/rent_4.jpg" alt="動線">
-                    <img src="images/rent_5.jpg" alt="臥室3">
-                    <img src="images/rent_6.jpg" alt="臥室4">
-                    <img src="images/rent_7.jpg" alt="收納">
-                    <img src="images/rent_8.jpg" alt="臥室5">
-                    <img src="images/rent_9.jpg" alt="衛浴1">
-                    <img src="images/rent_10.jpg" alt="衛浴2">
+                    <img src="images/rent_1.jpg" alt="臥室">
+                    <img src="images/rent_5.jpg" alt="採光">
+                    <img src="images/rent_3.jpg" alt="公區">
+                    <img src="images/rent_9.jpg" alt="衛浴">
                 </div>
                 <div class="info-grid">
-                    <div class="info-item"><b>💰 租金：</b>誠可議 / 月</div>
+                    <div class="info-item"><b>💰 租金：</b>歡迎洽詢 / 月</div>
                     <div class="info-item"><b>📏 坪數：</b>格局方正</div>
-                    <div class="info-item"><b>🏢 型態：</b>公寓/透天分租</div>
-                    <div class="info-item"><b>🚇 交通：</b>永和生活圈 (近捷運)</div>
+                    <div class="info-item"><b>🏢 型態：</b>優質公寓分租</div>
+                    <div class="info-item"><b>🚇 交通：</b>鄰近永和精華生活圈</div>
                 </div>
                 <div class="description">
-                    ✨ <b>環境清幽，採光極佳！</b><br>
-                    房間重新整理過，具備木紋地板，溫馨舒適。附書桌、床組及冷氣。公共空間寬敞明亮，樓梯乾淨。屋主直租，尋找愛乾淨、穩定的好房客。
+                    ✨ <b>全新整理，灰木紋地板質感滿分！</b><br>
+                    房間採光通風極佳，配備齊全書桌、床組。公共空間乾淨明亮。屋主直租免仲介費，環境單純安靜，非常適合追求生活品質的上班族。
                 </div>
-                <a href="https://t.me/your_telegram_link" class="contact-btn">📞 點我獲取完整資訊</a>
+                <a href="https://line.me/ti/p/~wanbadan3310" class="contact-btn">💬 直接加屋主 LINE 預約看房</a>
             </div>
         </div>
 
-        <!-- 中和出售 -->
-        <div class="card">
-            <div class="card-header sale-header">
-                <span>中和區 · 南勢角捷運旁金店面</span>
-                <span class="tag">稀有自售</span>
-            </div>
-            <div class="card-body">
-                <img src="images/sale_main.jpg" alt="店面權狀資訊" class="property-img-large">
-                <div class="info-grid">
-                    <div class="info-item"><b>💰 售價：</b>誠者面議</div>
-                    <div class="info-item"><b>📏 坪數：</b>權狀 42.43 坪 (主建 31.35)</div>
-                    <div class="info-item"><b>🏢 型態：</b>大寬金店 (含地下室)</div>
-                    <div class="info-item"><b>📍 地址：</b>和平街 24 巷 1 號</div>
-                </div>
-                <div class="description">
-                    🚀 <b>南勢角捷運站旁，極稀有大地坪店面！</b><br>
-                    具備超大面寬，吸睛度高。除了主建物外，另有地下室可彈性使用，空間利用率極高。緊鄰夜市與捷運出口人流，是投資或創業的最佳選擇。
-                </div>
-                <a href="https://t.me/your_telegram_link" class="contact-btn">📩 私訊屋主洽談細節</a>
-            </div>
-        </div>
     </div>
 
 </body>
