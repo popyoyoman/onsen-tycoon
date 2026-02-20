@@ -3,194 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>開運文摘：每日自動更新 - Fortune Reader</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <title>奇遇的故事銀行 | 深度期刊與人生經歷</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f4f1ea;
-            --text: #2c3e50;
-            --accent: #8b4513;
-            --card: #ffffff;
+            --bg: #ffffff;
+            --text-main: #1a1a1a;
+            --text-sub: #666666;
+            --accent: #000000;
+            --line: #efefef;
         }
 
         body {
-            font-family: 'Noto Serif TC', serif;
+            font-family: 'Noto Sans TC', sans-serif;
             background-color: var(--bg);
-            color: var(--text);
+            color: var(--text-main);
             margin: 0;
-            padding: 20px;
-            line-height: 1.6;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
         }
 
         header {
-            text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 20px;
-        }
-
-        h1 { margin: 0; color: var(--accent); font-size: 2.5rem; }
-        .subtitle { font-size: 1rem; color: #666; margin-top: 10px; }
-
-        #articles-container {
             max-width: 800px;
             margin: 0 auto;
+            padding: 80px 20px 40px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--line);
         }
 
-        .article-card {
-            background: var(--card);
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-            border-left: 5px solid var(--accent);
+        header h1 {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 2.8rem;
+            margin: 0;
+            letter-spacing: -1px;
         }
 
-        .article-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        header p {
+            font-size: 1.1rem;
+            color: var(--text-sub);
+            margin-top: 15px;
+            font-weight: 300;
         }
 
-        .article-date { font-size: 0.85rem; color: #999; margin-bottom: 10px; }
-        .article-title { font-size: 1.5rem; margin: 0 0 15px 0; color: var(--accent); }
-        .article-excerpt { font-size: 1.1rem; color: #444; margin-bottom: 20px; }
-        
-        .read-more {
-            display: inline-block;
+        .nav-tags {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        article {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--line);
+            transition: opacity 0.3s;
+        }
+
+        article:last-child { border-bottom: none; }
+
+        .meta {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-tag {
+            color: var(--text-main);
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        h2 {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.8rem;
+            margin: 10px 0 20px 0;
+            cursor: pointer;
+        }
+
+        h2:hover {
+            opacity: 0.7;
+        }
+
+        .excerpt {
+            font-size: 1.05rem;
+            color: #444;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .read-link {
+            font-weight: 700;
             text-decoration: none;
-            color: white;
-            background: var(--accent);
-            padding: 8px 20px;
-            border-radius: 4px;
-            font-weight: bold;
-            transition: opacity 0.2s;
+            color: var(--text-main);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
         }
 
-        .read-more:hover { opacity: 0.8; }
+        .read-link::after {
+            content: "→";
+            transition: transform 0.2s;
+        }
 
-        .loading { text-align: center; font-size: 1.2rem; color: #666; padding: 50px; }
-        
-        #status-bar {
+        .read-link:hover::after {
+            transform: translateX(5px);
+        }
+
+        footer {
+            max-width: 800px;
+            margin: 100px auto 50px auto;
+            padding: 0 20px;
+            font-size: 0.85rem;
+            color: var(--text-sub);
             text-align: center;
-            font-size: 0.8rem;
-            color: #999;
-            margin-top: 50px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>📜 開運文摘</h1>
-        <div class="subtitle">自動抓取最新網路文學與開運解析</div>
+        <h1>奇遇的故事銀行</h1>
+        <p>匯集國際教育期刊、科技趨勢與人生珍貴記憶的深度閱讀空間。</p>
     </header>
 
-    <div id="articles-container">
-        <div class="loading">正在感應氣運，抓取文章中...</div>
+    <div class="nav-tags">
+        <span>Education</span>
+        <span>Life</span>
+        <span>Trends</span>
     </div>
 
-    <div id="curated-section" style="max-width: 800px; margin: 40px auto;">
-        <h2 style="text-align: center; color: var(--accent);">✨ 2026 趨勢與期刊精選</h2>
-        <div class="article-card">
-            <div class="article-date">2026年2月</div>
-            <h2 class="article-title">資策會 MIC：2026 年十大重點科技趨勢</h2>
-            <div class="article-excerpt">展望 2026，AI 伺服器出貨將突破 450 萬台，代理型 AI (Agentic AI) 成為核心，Physical AI (機器人) 基礎正在奠定...</div>
-            <a href="https://www.cio.com.tw/104387/" target="_blank" class="read-more">閱讀報告</a>
-        </div>
-        <div class="article-card">
-            <div class="article-date">2026年1月</div>
-            <h2 class="article-title">Vogue 深度解析：2026 年的「數位排毒」趨勢</h2>
-            <div class="article-excerpt">面對「Brain Rot」幽默與演算法疲勞，2026 年的消費者開始追求更純粹、離線的體驗。品牌如何在這波潮流中重新定位？</div>
-            <a href="https://www.vogue.com.tw/article/from-unseriousness-to-superfandom-consumer-trend-predictions-for-2026" target="_blank" class="read-more">趨勢分析</a>
-        </div>
-        <div class="article-card">
-            <div class="article-date">2026年1月</div>
-            <h2 class="article-title">2026 全球經濟展望：從 Beta 轉向 Alpha</h2>
-            <div class="article-excerpt">數位時代分析指出，2026 年全球供應鏈重構與 AI 革命將進入深水區，廉價勞動力是否會徹底消失？</div>
-            <a href="https://www.bnext.com.tw/article/89693/2026-global-economic-outlook-key-trends-and-challenges" target="_blank" class="read-more">經濟專題</a>
-        </div>
+    <div class="container">
+        
+        <!-- 教育期刊 1 -->
+        <article>
+            <div class="meta">
+                <span class="category-tag">Education</span>
+                <span>•</span>
+                <span>2026 Feb Update</span>
+            </div>
+            <h2>OECD 教育趨勢報告：從「標準化」回歸「個人化」</h2>
+            <div class="excerpt">
+                根據 2026 年最新發布的 OECD 研究，全球教育正經歷一場寧靜革命。AI 不再只是輔助工具，而是成為每個學生的個性化導師。報告指出，未來的核心競爭力在於「如何與 AI 協作」以及「具備韌性的心理素質」。
+            </div>
+            <a href="https://www.oecd.org/en/publications/education-at-a-glance-2025_1c0d9c79-en.html" target="_blank" class="read-link">閱讀完整報告</a>
+        </article>
 
-        <h2 style="text-align: center; color: var(--accent); margin-top: 60px;">📚 2025 年度深度推薦</h2>
-        <div class="article-card">
-            <div class="article-date">2026年1月</div>
-            <h2 class="article-title">《臺灣經濟四百年》翻案與思考</h2>
-            <div class="article-excerpt">吳聰敏教授的這本巨作，挑戰了我們從小學到大的經濟神話。他用數據告訴我們，臺灣的發展並非單一英雄的功勞，而是跨越百年的結構性演進...</div>
-            <a href="https://vocus.cc/article/6956282afd89780001d49942" target="_blank" class="read-more">閱讀專題</a>
-        </div>
-        <div class="article-card">
-            <div class="article-date">2025年12月</div>
-            <h2 class="article-title">紐約時報 2025 百大選書：歷史與人性的碰撞</h2>
-            <div class="article-excerpt">今年的名單中，特別強調了全球局勢變動下的個人史。從《Katabasis》到《The South》，這些作品都在試圖重新定義歷史的敘事方式...</div>
-            <a href="https://meet.eslite.com/tw/tc/article/202512180001" target="_blank" class="read-more">查看書單</a>
-        </div>
-        <div class="article-card">
-            <div class="article-date">2025年6月</div>
-            <h2 class="article-title">網文趨勢：為什麼「奪運流」小說在 2025 依然大熱？</h2>
-            <div class="article-excerpt">在充滿不確定性的時代，人們對「掌控命運」有著近乎偏執的渴望。從《大奉打更人》到最新的玄幻作品，這類故事背後的心理補償機制值得深入剖析...</div>
-            <a href="https://monkey7927.pixnet.net/blog/posts/3051113588" target="_blank" class="read-more">深度分析</a>
-        </div>
+        <!-- 人生經歷 1 -->
+        <article>
+            <div class="meta">
+                <span class="category-tag">Life Story</span>
+                <span>•</span>
+                <span>Featured Memory</span>
+            </div>
+            <h2>一週歲的溫泉慶生：跨越三代的幸福瞬間</h2>
+            <div class="excerpt">
+                2024 年的暑假，全家人聚在溫馨的溫泉池中，慶祝寶貝的一週歲生日。這不只是一張合照，更是連結祖孫情誼的重要時刻。這份記憶被妥善保存在數位空間中，成為隨時可以提取的溫度。
+            </div>
+            <a href="https://popyoyoman.github.io/memories-2026/" class="read-link">查看回憶專題</a>
+        </article>
+
+        <!-- 教育期刊 2 -->
+        <article>
+            <div class="meta">
+                <span class="category-tag">Psychology</span>
+                <span>•</span>
+                <span>Academic Insight</span>
+            </div>
+            <h2>哈佛教育評論：社交情緒學習 (SEL) 為何在 AI 時代更顯重要？</h2>
+            <div class="excerpt">
+                當技術能夠取代計算與記憶時，人類獨有的「情感連結」與「自我覺察」成為無可取代的資產。哈佛研究顯示，從小接受 SEL 訓練的孩子，成年後的抗壓力與社會成就顯著高出 35%。
+            </div>
+            <a href="#" class="read-link">深入探討</a>
+        </article>
+
+        <!-- 科技趨勢 -->
+        <article>
+            <div class="meta">
+                <span class="category-tag">Trends</span>
+                <span>•</span>
+                <span>Tech 2026</span>
+            </div>
+            <h2>2026 十大重點科技：代理型 AI 正在改變世界</h2>
+            <div class="excerpt">
+                資策會 MIC 預測，2026 年全球將進入 Agentic AI 爆發期。這意味著 AI 將從「被動應答」轉向「主動執行」。這對商業模式與個人生產力將帶來翻天覆地的變革。
+            </div>
+            <a href="https://www.cio.com.tw/104387/" target="_blank" class="read-link">查看科技展望</a>
+        </article>
+
     </div>
 
-    <div id="status-bar">
-        最後更新：<span id="last-update">-</span> | 自動更新頻率：每 6 小時
-    </div>
+    <footer>
+        &copy; 2026 奇遇的故事銀行 - 讓閱讀回歸深度
+    </footer>
 
-    <script>
-        // 我們使用 RSS2JSON API 來抓取內容 (這裡以一個知乎或新聞來源作為範例)
-        // 你可以之後換成任何你喜歡的 RSS 連結
-        const RSS_URL = 'https://rss.feed43.com/9128532845642131.xml'; // 示意連結
-        const API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://www.thepaper.cn/rss')}`;
-
-        async function fetchArticles() {
-            try {
-                const response = await fetch(API_URL);
-                const data = await response.json();
-                
-                if (data.status === 'ok') {
-                    renderArticles(data.items);
-                    document.getElementById('last-update').innerText = new Date().toLocaleString();
-                } else {
-                    throw new Error('API Error');
-                }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                document.getElementById('articles-container').innerHTML = 
-                    '<div class="loading">目前氣運受阻，請稍後再試。</div>';
-            }
-        }
-
-        function renderArticles(items) {
-            const container = document.getElementById('articles-container');
-            container.innerHTML = '';
-
-            items.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'article-card';
-                
-                // 格式化日期
-                const date = new Date(item.pubDate).toLocaleDateString('zh-TW', {
-                    year: 'numeric', month: 'long', day: 'numeric'
-                });
-
-                // 處理摘要 (去除 HTML 標籤)
-                const excerpt = item.description.replace(/<[^>]*>/g, '').substring(0, 100) + '...';
-
-                card.innerHTML = `
-                    <div class="article-date">${date}</div>
-                    <h2 class="article-title">${item.title}</h2>
-                    <div class="article-excerpt">${excerpt}</div>
-                    <a href="${item.link}" target="_blank" class="read-more">閱讀全文</a>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // 初始化
-        fetchArticles();
-
-        // 設定每 10 分鐘自動檢查一次 (模擬即時)
-        setInterval(fetchArticles, 600000);
-    </script>
 </body>
 </html>
